@@ -855,6 +855,39 @@
                  "width":63.0496100879376,
                  "x":8.29600132736021,
                  "y":590.675294508047
+                }, 
+                {
+                 "height":64.7088103534097,
+                 "id":61,
+                 "name":"Infotafelpopup",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":101.211216193795,
+                 "x":808.030529284885,
+                 "y":494.441679110669
+                }, 
+                {
+                 "height":59.7312095569935,
+                 "id":62,
+                 "name":"Infotafel",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":64.7088103534097,
+                 "x":738.344118135059,
+                 "y":512.692882030861
+                }, 
+                {
+                 "height":1.65920026547207,
+                 "id":63,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.65920026547201,
+                 "x":615.563298490128,
+                 "y":496.100879376141
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -926,7 +959,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":55,
+ "nextobjectid":64,
  "orientation":"orthogonal",
  "properties":[
         {
