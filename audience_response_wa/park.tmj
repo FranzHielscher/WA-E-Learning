@@ -683,6 +683,23 @@
                  "width":0.897859437932709,
                  "x":317.842241028194,
                  "y":293.60003620401
+                }, 
+                {
+                 "height":68.0272108843537,
+                 "id":30,
+                 "name":"to-Mainhall",
+                 "properties":[
+                        {
+                         "name":"exitUrl ",
+                         "type":"string",
+                         "value":"mainhall.tmj#from-mainhall"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":92.9152148664344,
+                 "x":612.244897959184,
+                 "y":-3.31840053094408
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -754,7 +771,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":29,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "properties":[
         {
