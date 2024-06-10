@@ -717,6 +717,144 @@
                  "width":75.8508526157421,
                  "x":1259.5640596467,
                  "y":567.334872785634
+                }, 
+                {
+                 "height":0,
+                 "id":36,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1161.44018583043,
+                 "y":716.774514683922
+                }, 
+                {
+                 "height":0,
+                 "id":37,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1164.75858636137,
+                 "y":716.774514683922
+                }, 
+                {
+                 "height":0,
+                 "id":38,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.65920026547201,
+                 "x":1163.0993860959,
+                 "y":716.774514683922
+                }, 
+                {
+                 "height":0,
+                 "id":39,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1163.0993860959,
+                 "y":716.774514683922
+                }, 
+                {
+                 "height":0,
+                 "id":40,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1166.41778662685,
+                 "y":720.092915214866
+                }, 
+                {
+                 "height":0,
+                 "id":41,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1166.41778662685,
+                 "y":720.092915214866
+                }, 
+                {
+                 "height":0,
+                 "id":42,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1166.41778662685,
+                 "y":720.092915214866
+                }, 
+                {
+                 "height":0,
+                 "id":43,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1168.07698689232,
+                 "y":720.092915214866
+                }, 
+                {
+                 "height":0,
+                 "id":44,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.65920026547201,
+                 "x":1169.73618715779,
+                 "y":720.092915214866
+                }, 
+                {
+                 "height":1.65920026547201,
+                 "id":45,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1171.39538742326,
+                 "y":718.433714949394
+                }, 
+                {
+                 "height":0,
+                 "id":46,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.65920026547201,
+                 "x":1166.41778662685,
+                 "y":718.433714949394
+                }, 
+                {
+                 "height":76.323212211714,
+                 "id":52,
+                 "name":"Zum Labyrinth",
+                 "properties":[
+                        {
+                         "name":"exitUrl",
+                         "type":"string",
+                         "value":"labyrinth.tmj#from-park"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":63.0496100879376,
+                 "x":8.29600132736021,
+                 "y":590.675294508047
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -788,7 +926,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":36,
+ "nextobjectid":55,
  "orientation":"orthogonal",
  "properties":[
         {
