@@ -515,6 +515,23 @@
                  "width":0.897859437932709,
                  "x":317.842241028194,
                  "y":293.60003620401
+                }, 
+                {
+                 "height":40.7399251266241,
+                 "id":29,
+                 "name":"Entenreich",
+                 "properties":[
+                        {
+                         "name":"exitUrl",
+                         "type":"string",
+                         "value":"ente.tmj#from-mainhall"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":36.3356088967189,
+                 "x":1238.71393966087,
+                 "y":480.070469059678
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -572,7 +589,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":29,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "properties":[
         {
