@@ -1,7 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-
+import "./pop-up-style.css";
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
@@ -13,19 +13,40 @@ WA.onInit()
     console.log("Player tags: ", WA.player.tags);
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting1").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting2").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting2").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting3").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
+
+    WA.room.area.onEnter("Infotafel").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "Infotafelpopup",
+        "<div class='pop-up-content'>Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!</div>",
+        []
+      );
+    });
+    WA.room.area.onLeave("Infotafel").subscribe(closePopup);
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()
