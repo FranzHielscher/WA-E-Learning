@@ -513,20 +513,20 @@
                  "y":601.333333333333
                 }, 
                 {
-                 "height":29.3333333333333,
+                 "height":29.8333333333333,
                  "id":29,
                  "name":"l1s1",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":32,
-                 "x":350.666666666667,
+                 "width":31,
+                 "x":352.666666666667,
                  "y":64
                 }, 
                 {
                  "height":34.6666666666667,
                  "id":30,
-                 "name":"l2s2",
+                 "name":"l1s2",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -537,7 +537,7 @@
                 {
                  "height":30.6666666666666,
                  "id":31,
-                 "name":"l2s3",
+                 "name":"l1s3",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -548,7 +548,7 @@
                 {
                  "height":34.6666666666667,
                  "id":33,
-                 "name":"l2s4",
+                 "name":"l1s4",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -559,7 +559,7 @@
                 {
                  "height":35.9999999999999,
                  "id":34,
-                 "name":"l2s5",
+                 "name":"l1s5",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -570,13 +570,79 @@
                 {
                  "height":36,
                  "id":35,
-                 "name":"l2extra",
+                 "name":"l1extra",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
                  "width":33.3333333333334,
                  "x":833.333333333333,
                  "y":416
+                }, 
+                {
+                 "height":129,
+                 "id":37,
+                 "name":"l1s1popup",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":129,
+                 "x":319.5,
+                 "y":1
+                }, 
+                {
+                 "height":123,
+                 "id":38,
+                 "name":"l1s2popup",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":189,
+                 "x":641,
+                 "y":39
+                }, 
+                {
+                 "height":129,
+                 "id":39,
+                 "name":"l1s3popup",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":161,
+                 "x":736,
+                 "y":284
+                }, 
+                {
+                 "height":127,
+                 "id":40,
+                 "name":"l1s4popup",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":130,
+                 "x":672,
+                 "y":288
+                }, 
+                {
+                 "height":128,
+                 "id":41,
+                 "name":"l1s5popup",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":191,
+                 "x":417,
+                 "y":416
+                }, 
+                {
+                 "height":118,
+                 "id":42,
+                 "name":"l1extrapopup",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":134,
+                 "x":803,
+                 "y":421
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -627,7 +693,7 @@
          "y":0
         }],
  "nextlayerid":78,
- "nextobjectid":37,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -36,6 +36,15 @@ WA.onInit()
     });
     WA.room.area.onLeave("Infotafel").subscribe(closePopup);
 
+    WA.room.area.onEnter("l1s1").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "l1s1popup",
+        "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
+        []
+      );
+    });
+    WA.room.area.onLeave("l1s1").subscribe(closePopup);
+
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()
       .then(() => {
