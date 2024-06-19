@@ -556,6 +556,27 @@
                  "height":90,
                  "id":31,
                  "name":"JitsiMeeting1",
+                 "properties":[
+                        {
+                         "name":"focusable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"jitsiRoom",
+                         "type":"string",
+                         "value":"Jitsi-Meeting-Team-1"
+                        }, 
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -564,37 +585,79 @@
                  "y":130
                 }, 
                 {
-                 "height":88,
+                 "height":166,
                  "id":33,
                  "name":"JitsiMeeting2",
+                 "properties":[
+                        {
+                         "name":"focusable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"jitsiRoom",
+                         "type":"string",
+                         "value":"Jitsi-Meeting-Team-2"
+                        }, 
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
                  "rotation":0,
                  "type":"area",
                  "visible":true,
                  "width":186,
                  "x":549,
-                 "y":390
+                 "y":349
                 }, 
                 {
-                 "height":91,
+                 "height":168,
                  "id":34,
                  "name":"JitsiMeeting3",
+                 "properties":[
+                        {
+                         "name":"focusable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"jitsiRoom",
+                         "type":"string",
+                         "value":"Jitsi-Meeting-Team-3"
+                        }, 
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
                  "rotation":0,
                  "type":"area",
                  "visible":true,
                  "width":188,
                  "x":580,
-                 "y":641
+                 "y":605
                 }, 
                 {
-                 "height":127,
+                 "height":39,
                  "id":36,
-                 "name":"JitsiMeetingPopup",
+                 "name":"JitsiMeetingPopup3",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":496,
-                 "x":96,
-                 "y":377
+                 "width":134,
+                 "x":603,
+                 "y":775
                 }, 
                 {
                  "height":37,
@@ -629,6 +692,28 @@
                  "width":36,
                  "x":1,
                  "y":636.5
+                }, 
+                {
+                 "height":37,
+                 "id":46,
+                 "name":"JitsiMeetingPopup2",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":137,
+                 "x":573,
+                 "y":520
+                }, 
+                {
+                 "height":33,
+                 "id":47,
+                 "name":"JitsiMeetingPopup1",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":131,
+                 "x":605,
+                 "y":262
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -685,7 +770,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":46,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "properties":[
         {
