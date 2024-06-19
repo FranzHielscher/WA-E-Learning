@@ -1,7 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-
+import "/pop-up-style.css";
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
@@ -26,6 +26,15 @@ WA.onInit()
       currentPopup = WA.ui.openPopup("JitsiMeetingPopup3", "Welcome to Jitsi!", []);
     });
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
+
+    WA.room.area.onEnter("Infotafel").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "Infotafelpopup",
+        "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
+        []
+      );
+    });
+    WA.room.area.onLeave("Infotafel").subscribe(closePopup);
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()

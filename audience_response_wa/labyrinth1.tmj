@@ -499,6 +499,12 @@
                  "height":36,
                  "id":28,
                  "name":"topark",
+                 "properties":[
+                        {
+                         "name":"exitUrl",
+                         "type":"string",
+                         "value":"park.tmj#from-labyrinth1"
+                        }],
                  "rotation":0,
                  "type":"area",
                  "visible":true,
