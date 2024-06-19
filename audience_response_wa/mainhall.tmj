@@ -532,6 +532,23 @@
                  "width":36.3356088967189,
                  "x":1238.71393966087,
                  "y":480.070469059678
+                }, 
+                {
+                 "height":26.4258973794318,
+                 "id":30,
+                 "name":"Zum Park",
+                 "properties":[
+                        {
+                         "name":"exitUrl",
+                         "type":"string",
+                         "value":"park.tmj#from-mainhall"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":110.107905747633,
+                 "x":615.503193129267,
+                 "y":865.448139176393
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -589,7 +606,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":30,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "properties":[
         {
