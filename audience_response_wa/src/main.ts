@@ -1,7 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import "./pop-up-style.css";
+import "/pop-up-style.css";
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
@@ -42,7 +42,7 @@ WA.onInit()
     WA.room.area.onEnter("Infotafel").subscribe(() => {
       currentPopup = WA.ui.openPopup(
         "Infotafelpopup",
-        "<div class='pop-up-content'>Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!</div>",
+        "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
         []
       );
     });
