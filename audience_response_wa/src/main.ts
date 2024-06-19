@@ -13,29 +13,17 @@ WA.onInit()
     console.log("Player tags: ", WA.player.tags);
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "JitsiMeetingPopup",
-        "Welcome to Jitsi!",
-        []
-      );
+      currentPopup = WA.ui.openPopup("JitsiMeetingPopup1", "Welcome to Jitsi!", []);
     });
     WA.room.area.onLeave("JitsiMeeting1").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting2").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "JitsiMeetingPopup",
-        "Welcome to Jitsi!",
-        []
-      );
+      currentPopup = WA.ui.openPopup("JitsiMeetingPopup2", "Welcome to Jitsi!", []);
     });
     WA.room.area.onLeave("JitsiMeeting2").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting3").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "JitsiMeetingPopup",
-        "Welcome to Jitsi!",
-        []
-      );
+      currentPopup = WA.ui.openPopup("JitsiMeetingPopup3", "Welcome to Jitsi!", []);
     });
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
 
