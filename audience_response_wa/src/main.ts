@@ -13,17 +13,29 @@ WA.onInit()
     console.log("Player tags: ", WA.player.tags);
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup1", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup1",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting1").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting2").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup2", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup2",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting2").subscribe(closePopup);
 
     WA.room.area.onEnter("JitsiMeeting3").subscribe(() => {
-      currentPopup = WA.ui.openPopup("JitsiMeetingPopup3", "Welcome to Jitsi!", []);
+      currentPopup = WA.ui.openPopup(
+        "JitsiMeetingPopup3",
+        "Welcome to Jitsi!",
+        []
+      );
     });
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
 
@@ -33,6 +45,7 @@ WA.onInit()
         "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
         []
       );
+      customizePopUpStyle();
     });
     WA.room.area.onLeave("Infotafel").subscribe(closePopup);
 
@@ -53,6 +66,15 @@ WA.onInit()
       .catch((e) => console.error(e));
   })
   .catch((e) => console.error(e));
+
+function customizePopUpStyle() {
+  if (currentPopup !== undefined) {
+    let popupElement = currentPopup.getElement();
+    if (popupElement) {
+      popupElement.classList.add("pop-up-content"); // Beispiel für CSS-Klasse
+    }
+  }
+}
 
 function closePopup() {
   if (currentPopup !== undefined) {
