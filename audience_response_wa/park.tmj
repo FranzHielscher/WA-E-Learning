@@ -736,28 +736,6 @@
                  "y":588.705342891037
                 }, 
                 {
-                 "height":120.731219316995,
-                 "id":61,
-                 "name":"Infotafelpopup",
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":162.326571426797,
-                 "x":807.363862618218,
-                 "y":438.419270147084
-                }, 
-                {
-                 "height":97.0645428903267,
-                 "id":62,
-                 "name":"Infotafel",
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":99.3754770200763,
-                 "x":703.677451468392,
-                 "y":512.692882030861
-                }, 
-                {
                  "height":1.65920026547207,
                  "id":63,
                  "name":"",
@@ -801,6 +779,62 @@
                  "width":17.8497,
                  "x":3.17089738986504,
                  "y":746.152104965623
+                }, 
+                {
+                 "height":109.378754545454,
+                 "id":66,
+                 "name":"Infotafel",
+                 "properties":[
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":117.174242424242,
+                 "x":689.045454545455,
+                 "y":507.810622727273
+                }, 
+                {
+                 "height":139.416666666667,
+                 "id":67,
+                 "name":"Infotafel-Pop-Up",
+                 "properties":[
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":179.189393939394,
+                 "x":805.765151515152,
+                 "y":417.507575757576
+                }, 
+                {
+                 "height":114.583333333333,
+                 "id":70,
+                 "name":"openWebsite",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/www.htwk-leipzig.de"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":96.5909090909091,
+                 "x":498.106060606061,
+                 "y":726.325757575758
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -872,7 +906,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":66,
+ "nextobjectid":72,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1054,6 +1088,19 @@
          "name":"Erweiterung",
          "spacing":0,
          "tilecount":1064,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":3,
+         "firstgid":4020,
+         "image":"tilesets\/PIPOYA FREE RPG Character Sprites 32x32\/Male\/Male 11-1.png",
+         "imageheight":128,
+         "imagewidth":96,
+         "margin":0,
+         "name":"NPC",
+         "spacing":0,
+         "tilecount":12,
          "tileheight":32,
          "tilewidth":32
         }],

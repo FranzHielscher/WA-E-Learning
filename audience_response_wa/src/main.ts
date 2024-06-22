@@ -1,7 +1,6 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import "/pop-up-style.css";
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
@@ -40,15 +39,22 @@ WA.onInit()
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
 
     WA.room.area.onEnter("Infotafel").subscribe(() => {
+      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
-        "Infotafelpopup",
+        "Infotafel-Pop-Up",
         "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
-        []
+        [
+          {
+            label: "Alles gelesen",
+            callback: () => {
+              // Hier kannst du die Aktion hinzufügen, die bei Klick auf den Button ausgeführt wird
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
       );
-      customizePopUpStyle();
     });
-    WA.room.area.onLeave("Infotafel").subscribe(closePopup);
-
     WA.room.area.onEnter("l1s1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
         "l1s1popup",
