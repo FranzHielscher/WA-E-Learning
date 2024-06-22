@@ -5,11 +5,33 @@ console.log("Script started successfully");
 
 let currentPopup: any = undefined;
 
+let activeAreas: { [key: string]: boolean } = {
+  conference: false,
+  labyrinth1: false,
+};
 // Waiting for the API to be ready
 WA.onInit()
   .then(() => {
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
+
+    // Funktion zum Aktivieren einer Area
+    function activateArea(area: string) {
+      if (!activeAreas[area]) {
+        activeAreas[area] = true;
+        console.log(`Activated area: ${area}`);
+        // Hier kannst du weitere Aktionen ausführen, wenn eine Area aktiviert wird
+      }
+    }
+
+    // Funktion zum Deaktivieren einer Area
+    function deactivateArea(area: string) {
+      if (activeAreas[area]) {
+        activeAreas[area] = false;
+        console.log(`Deactivated area: ${area}`);
+        // Hier kannst du weitere Aktionen ausführen, wenn eine Area deaktiviert wird
+      }
+    }
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -55,6 +77,96 @@ WA.onInit()
         ]
       );
     });
+    WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Labyrinth-Pop-Up",
+        "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!",
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+    });
+    WA.room.area.onEnter("Infotafel-Haupthalle").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Haupthalle-Pop-Up",
+        "Ihr begebt euch in Richtung der Haupthalle!",
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+      deactivateArea("conference");
+    });
+    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Conference-Pop-Up",
+        "Ihr begebt euch in Richtung der Konferenzinsel!",
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+    });
+    WA.room.area.onEnter("Infotafel-Quizraum").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Quizraum-Pop-Up",
+        "Betretet den Quizwald erst nachdem Ihr auf der Konferenzinsel wart!",
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+    });
+    WA.room.area.onEnter("Infotafel-Feld").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Feld-Pop-Up",
+        "Die Erdäpfel sind leider noch nicht erntereif!",
+        [
+          {
+            label: "Schade",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+    });
+    WA.room.area.onEnter("Infotafel-Friedhof").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "Friedhof-Pop-Up",
+        "Der Friedhof der Verdammten",
+        []
+      );
+    });
+    WA.room.area.onLeave("Infotafel-Friedhof").subscribe(closePopup);
+
     WA.room.area.onEnter("l1s1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
         "l1s1popup",
