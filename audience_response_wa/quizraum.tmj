@@ -460,6 +460,84 @@
                  "width":140.855,
                  "x":435.810924569218,
                  "y":5.86409250967067
+                }, 
+                {
+                 "height":96.8870156370883,
+                 "id":35,
+                 "name":"Infotafel-Quizerl\u00e4uterung",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":96.1800437580589,
+                 "x":550.573675225648,
+                 "y":255.089489485406
+                }, 
+                {
+                 "height":94,
+                 "id":36,
+                 "name":"Quizerl\u00e4uterung-Pop-Up",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":154.666,
+                 "x":652.616595592545,
+                 "y":141.001406634627
+                }, 
+                {
+                 "height":64.3280971750087,
+                 "id":37,
+                 "name":"Infotafel-Quizergebnis",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":186.504698159653,
+                 "x":419.287798616809,
+                 "y":561.77335617161
+                }, 
+                {
+                 "height":94,
+                 "id":38,
+                 "name":"Quizergebnis-Pop-Up",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":154.666,
+                 "x":435.207147696636,
+                 "y":416.176649865198
+                }, 
+                {
+                 "height":276.225530418474,
+                 "id":43,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/www.mentimeter.com\/de-DE\/features\/quiz-presentations"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":278.32610479428,
+                 "x":86.1235494080413,
+                 "y":277.275817606377
+                }, 
+                {
+                 "height":265.723128120971,
+                 "id":44,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/www.mentimeter.com\/de-DE\/features\/quiz-presentations"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":278.326,
+                 "x":662.206124369945,
+                 "y":285.152736724886
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -511,7 +589,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":35,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "properties":[
         {

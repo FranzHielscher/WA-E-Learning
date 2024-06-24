@@ -1,5 +1,6 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
+import { Area } from "@workadventure/iframe-api-typings";
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
 console.log("Script started successfully");
 
@@ -8,6 +9,7 @@ let currentPopup: any = undefined;
 let activeAreas: { [key: string]: boolean } = {
   conference: false,
   labyrinth1: false,
+  quizraum: false,
 };
 // Waiting for the API to be ready
 WA.onInit()
@@ -72,6 +74,7 @@ WA.onInit()
               // Hier kannst du die Aktion hinzufügen, die bei Klick auf den Button ausgeführt wird
               WA.controls.restorePlayerControls();
               currentPopup.close();
+              deactivateArea("Quizraum");
             },
           },
         ]
@@ -166,6 +169,24 @@ WA.onInit()
       );
     });
     WA.room.area.onLeave("Infotafel-Friedhof").subscribe(closePopup);
+
+    WA.room.area.onEnter("Infotafel-Quizerläuterung").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "Quizerläuterung-Pop-Up",
+        "Begebt Euch an einen Quizpool!",
+        []
+      );
+    });
+    WA.room.area.onLeave("Infotafel-Quizerläuterung").subscribe(closePopup);
+
+    WA.room.area.onEnter("Infotafel-Quizergebnis").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "Quizergebnis-Pop-Up",
+        "Die Ergebnisse: ...",
+        []
+      );
+    });
+    WA.room.area.onLeave("Infotafel-Quizergebnis").subscribe(closePopup);
 
     WA.room.area.onEnter("l1s1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
