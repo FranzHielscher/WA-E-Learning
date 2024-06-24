@@ -638,7 +638,7 @@
                  "id":42,
                  "name":"l2extrapopup",
                  "rotation":0,
-                 "type":"",
+                 "type":"area",
                  "visible":true,
                  "width":134,
                  "x":784,

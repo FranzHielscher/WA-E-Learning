@@ -638,7 +638,7 @@
                  "id":42,
                  "name":"l1extrapopup",
                  "rotation":0,
-                 "type":"",
+                 "type":"area",
                  "visible":true,
                  "width":134,
                  "x":791,
@@ -693,7 +693,7 @@
          "y":0
         }],
  "nextlayerid":78,
- "nextobjectid":43,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "properties":[
         {

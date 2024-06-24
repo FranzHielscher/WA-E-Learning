@@ -638,7 +638,7 @@
                  "id":42,
                  "name":"l3extrapopup",
                  "rotation":0,
-                 "type":"",
+                 "type":"area",
                  "visible":true,
                  "width":134,
                  "x":803,
