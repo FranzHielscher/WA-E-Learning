@@ -197,6 +197,18 @@ WA.onInit()
     });
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
 
+    WA.room.area.onEnter("clock").subscribe(() => {
+      const today = new Date();
+      const time = today.getHours() + ":" + today.getMinutes();
+      currentPopup = WA.ui.openPopup(
+        "clock-Pop-Up",
+        "The time is: " + time,
+        []
+      );
+    });
+
+    WA.room.area.onLeave("clock").subscribe(closePopup);
+
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()
       .then(() => {

@@ -614,6 +614,28 @@
                  "width":278.326,
                  "x":662.206124369945,
                  "y":285.152736724886
+                }, 
+                {
+                 "height":39.697,
+                 "id":45,
+                 "name":"clock",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":71.9872,
+                 "x":369.417254530536,
+                 "y":238.522148224124
+                }, 
+                {
+                 "height":61.6673,
+                 "id":46,
+                 "name":"clock-Pop-Up",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":93.7162,
+                 "x":286.082938565233,
+                 "y":145.614597567694
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -665,7 +687,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":45,
+ "nextobjectid":47,
  "orientation":"orthogonal",
  "properties":[
         {
