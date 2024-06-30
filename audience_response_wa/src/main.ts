@@ -1,38 +1,35 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
-import { Area } from "@workadventure/iframe-api-typings";
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
 
-let activeAreas: { [key: string]: boolean } = {
-  conference: false,
-  labyrinth1: false,
-  quizraum: false,
+let deactivatedAreas: { [key: string]: boolean } = {
+  "Infotafel-Quizraum": false,
+  "Infotafel-Conference": false,
+  "Zum Quizraum": false,
 };
+
 // Waiting for the API to be ready
 WA.onInit()
   .then(() => {
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
 
-    // Funktion zum Aktivieren einer Area
-    function activateArea(area: string) {
-      if (!activeAreas[area]) {
-        activeAreas[area] = true;
-        console.log(`Activated area: ${area}`);
-        // Hier kannst du weitere Aktionen ausführen, wenn eine Area aktiviert wird
-      }
-    }
-
     // Funktion zum Deaktivieren einer Area
     function deactivateArea(area: string) {
-      if (activeAreas[area]) {
-        activeAreas[area] = false;
-        console.log(`Deactivated area: ${area}`);
-        // Hier kannst du weitere Aktionen ausführen, wenn eine Area deaktiviert wird
-      }
+      deactivatedAreas[area] = true;
+    }
+
+    // Funktion zum Aktivieren einer Area
+    function activateArea(area: string) {
+      deactivatedAreas[area] = false;
+    }
+
+    // Funktion, die prüft, ob eine Area deaktiviert ist
+    function isAreaDeactivated(area: string): boolean {
+      return deactivatedAreas[area] === true;
     }
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
@@ -74,7 +71,6 @@ WA.onInit()
               // Hier kannst du die Aktion hinzufügen, die bei Klick auf den Button ausgeführt wird
               WA.controls.restorePlayerControls();
               currentPopup.close();
-              deactivateArea("Quizraum");
             },
           },
         ]
@@ -111,9 +107,8 @@ WA.onInit()
           },
         ]
       );
-      deactivateArea("conference");
     });
-    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
+    /*WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
       WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "Conference-Pop-Up",
@@ -128,23 +123,61 @@ WA.onInit()
           },
         ]
       );
+    });*/
+    WA.room.area.onEnter("Infotafel").subscribe(() => {
+      deactivateArea("Infotafel-Quizraum");
+      deactivateArea("Infotafel-Conference");
+      deactivateArea("Zum Quizraum");
     });
+
+    // Event-Listener für Area2
     WA.room.area.onEnter("Infotafel-Quizraum").subscribe(() => {
-      WA.controls.disablePlayerControls();
-      currentPopup = WA.ui.openPopup(
-        "Quizraum-Pop-Up",
-        "Betretet den Quizwald erst nachdem Ihr auf der Konferenzinsel wart!",
-        [
-          {
-            label: "Verstanden",
-            callback: () => {
-              WA.controls.restorePlayerControls();
-              currentPopup.close();
+      if (isAreaDeactivated("Infotafel-Quizraum")) {
+        console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
+      } else {
+        WA.controls.disablePlayerControls();
+        currentPopup = WA.ui.openPopup(
+          "Quizraum-Pop-Up",
+          "Die Erdäpfel sind leider noch nicht erntereif!",
+          [
+            {
+              label: "Schade",
+              callback: () => {
+                WA.controls.restorePlayerControls();
+                currentPopup.close();
+              },
             },
-          },
-        ]
-      );
+          ]
+        );
+      }
     });
+
+    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
+      if (isAreaDeactivated("Infotafel-Conference")) {
+        console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
+      } else {
+        WA.controls.disablePlayerControls();
+        currentPopup = WA.ui.openPopup(
+          "Conference-Pop-Up",
+          "Die Erdäpfel sind leider noch nicht erntereif!",
+          [
+            {
+              label: "Schade",
+              callback: () => {
+                WA.controls.restorePlayerControls();
+                currentPopup.close();
+              },
+            },
+          ]
+        );
+      }
+    });
+    WA.room.area.onEnter("Zum Quizraum").subscribe(() => {
+      if (isAreaDeactivated("Zum Quizraum")) {
+        console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
+      }
+    });
+
     WA.room.area.onEnter("Infotafel-Feld").subscribe(() => {
       WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
@@ -195,6 +228,7 @@ WA.onInit()
         []
       );
     });
+    
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
 
     WA.room.area.onEnter("wegweiser").subscribe(() => {
