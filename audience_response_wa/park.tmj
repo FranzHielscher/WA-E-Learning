@@ -844,14 +844,14 @@
                  "y":746.152104965623
                 }, 
                 {
-                 "height":104.045421212121,
+                 "height":123.708130128403,
                  "id":66,
                  "name":"Infotafel",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":123.840909090909,
-                 "x":713.045454545455,
+                 "width":147.284908183399,
+                 "x":689.601455452965,
                  "y":507.810622727273
                 }, 
                 {
@@ -1111,7 +1111,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":92,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":[
         {
