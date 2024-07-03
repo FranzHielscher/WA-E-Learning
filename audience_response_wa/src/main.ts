@@ -249,27 +249,6 @@ WA.onInit()
       }
     });
 
-    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
-      if (isAreaDeactivated("Infotafel-Conference")) {
-        console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
-      } else {
-        WA.controls.disablePlayerControls();
-        currentPopup = WA.ui.openPopup(
-          "Conference-Pop-Up",
-          "Die Erdäpfel sind leider noch nicht erntereif!",
-          [
-            {
-              label: "Schade",
-              callback: () => {
-                WA.controls.restorePlayerControls();
-                currentPopup.close();
-              },
-            },
-          ]
-        );
-      }
-    });
-
     WA.room.area.onEnter("Zum Quizraum").subscribe(() => {
       if (isAreaDeactivated("Zum Quizraum")) {
         console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
