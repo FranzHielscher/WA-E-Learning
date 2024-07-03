@@ -5,6 +5,61 @@ console.log("Script started successfully");
 
 let currentPopup: any = undefined;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+interface Team {
+  name: string;
+  members: string[];
+}
+
+// Initialisierung der Teams
+const teams: { [key: string]: Team } = {
+  A: { name: "Team A", members: [] },
+  B: { name: "Team B", members: [] },
+  C: { name: "Team C", members: [] },
+};
+
+// Funktion zum Beitritt eines Teams
+function joinTeam(teamKey: string) {
+  const team = teams[teamKey];
+  const playerName = WA.player.name;
+
+  if (team.members.length < 4) {
+    if (!team.members.includes(playerName)) {
+      team.members.push(playerName);
+      socket.send(JSON.stringify({ type: "joinTeam", teamKey, playerName }));
+      WA.chat.sendChatMessage(
+        `${playerName} has joined ${team.name}`,
+        playerName
+      );
+    } else {
+      WA.chat.sendChatMessage(
+        `${playerName}, you are already in ${team.name}`,
+        playerName
+      );
+    }
+  } else {
+    WA.chat.sendChatMessage(`Sorry, ${team.name} is full.`, playerName);
+  }
+}
+
+// Verbindung zu einem WebSocket-Server herstellen
+const socket = new WebSocket("ws://localhost:8081");
+
+socket.onopen = () => {
+  console.log("WebSocket connection established");
+  // Bei Verbindungsaufbau Team-Informationen anfordern
+  socket.send(JSON.stringify({ type: "requestTeams" }));
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.type === "teamUpdate") {
+    teams[data.teamKey].members = data.members;
+  }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 let deactivatedAreas: { [key: string]: boolean } = {
   "Infotafel-Quizraum": false,
   "Infotafel-Conference": false,
@@ -66,7 +121,7 @@ function checkIfAlreadySignedA() {
     WA.controls.restorePlayerControls();
   }
 }
-function checkIfAlreadySignedB() {  
+function checkIfAlreadySignedB() {
   if ((team1 || team2 || team3) > 0) {
     currentPopup.close();
     WA.controls.restorePlayerControls();
@@ -94,6 +149,35 @@ WA.onInit()
   .then(() => {
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    WA.room.area.onEnter("teamAZone").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "teamAZone-Pop-Up",
+        "Sie sind Team A beigetreten",
+        []
+      );
+      joinTeam("A");
+    });
+    WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "teamAZone-Pop-Up",
+        "Welcome to Jitsi!",
+        []
+      );
+    });
+
+    WA.onEnterZone("teamBZone", () => {
+      joinTeam("B");
+    });
+
+    WA.onEnterZone("teamCZone", () => {
+      joinTeam("C");
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     WA.room.area.onEnter("Infotafel-Mainhall").subscribe(() => {
       WA.controls.disablePlayerControls();
@@ -339,6 +423,51 @@ WA.onInit()
 
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
 
+    WA.room.area.onEnter("wegweiser").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "wegweiserpopup",
+        "↑ Haupthalle\n→ Konferenzinsel\n↓ Quizraum\n← Labyrinth",
+        []
+      );
+    });
+    WA.room.area.onLeave("wegweiser").subscribe(closePopup);
+
+    WA.room.area.onEnter("l1").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "l1popup",
+        "Hier geht es zu Labyrinth 1",
+        []
+      );
+    });
+    WA.room.area.onLeave("l1").subscribe(closePopup);
+
+    WA.room.area.onEnter("l2").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "l2popup",
+        "Hier geht es zu Labyrinth 2",
+        []
+      );
+    });
+    WA.room.area.onLeave("l2").subscribe(closePopup);
+
+    WA.room.area.onEnter("l3").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "l3popup",
+        "Hier geht es zu Labyrinth 3",
+        []
+      );
+    });
+    WA.room.area.onLeave("l3").subscribe(closePopup);
+
+    WA.room.area.onEnter("backtopark").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "backtoparkpopup",
+        "Hier geht es zurück zum Park",
+        []
+      );
+    });
+    WA.room.area.onLeave("backtopark").subscribe(closePopup);
+
     WA.room.area.onEnter("clock").subscribe(() => {
       const today = new Date();
       const time = today.getHours() + ":" + today.getMinutes();
@@ -350,6 +479,39 @@ WA.onInit()
     });
 
     WA.room.area.onLeave("clock").subscribe(closePopup);
+
+    WA.room.area.onEnter("countdown").subscribe(() => {
+      let countdownTime = 10 * 60; // 10 minutes in seconds
+
+      function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${
+          remainingSeconds < 10 ? "0" : ""
+        }${remainingSeconds}`;
+      }
+
+      function updatePopup() {
+        currentPopup = WA.ui.openPopup(
+          "countdownpopup",
+          `Countdown: ${formatTime(countdownTime)}`,
+          []
+        );
+      }
+      updatePopup(); // Initial popup with the full countdown time
+
+      const countdownInterval = setInterval(() => {
+        countdownTime--;
+
+        if (countdownTime < 0) {
+          clearInterval(countdownInterval);
+          return;
+        }
+
+        updatePopup();
+      }, 1000); // Update every second
+    });
+    WA.room.area.onLeave("countdown").subscribe(closePopup);
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()

@@ -1,35 +1,63 @@
-const express = require("express");
-const http = require("http");
 const WebSocket = require("ws");
 
-const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const server = new WebSocket.Server({ port: 8081 });
 
-// WebSocket Server
-wss.on("connection", (ws) => {
-  console.log("Neue WebSocket Verbindung hergestellt.");
+let teams = {
+  A: [],
+  B: [],
+  C: [],
+};
 
-  // Beispiel: Nachrichten empfangen
-  ws.on("message", (message) => {
-    console.log(`Nachricht empfangen: ${message}`);
+server.on("connection", (socket) => {
+  console.log("Client connected");
 
-    // Beispiel: Nachrichten an alle Clients senden
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
+  // Wenn ein Client verbunden wird, senden wir die aktuellen Team-Informationen
+  socket.send(
+    JSON.stringify({ type: "teamUpdate", teamKey: "A", members: teams.A })
+  );
+  socket.send(
+    JSON.stringify({ type: "teamUpdate", teamKey: "B", members: teams.B })
+  );
+  socket.send(
+    JSON.stringify({ type: "teamUpdate", teamKey: "C", members: teams.C })
+  );
+
+  socket.on("message", (message) => {
+    const data = JSON.parse(message);
+
+    if (data.type === "joinTeam") {
+      if (teams[data.teamKey].length < 4) {
+        teams[data.teamKey].push(data.playerName);
+        // Aktualisierte Team-Informationen an alle Clients senden
+        server.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "teamUpdate",
+                teamKey: data.teamKey,
+                members: teams[data.teamKey],
+              })
+            );
+          }
+        });
       }
-    });
+    } else if (data.type === "requestTeams") {
+      // Aktuelle Team-Informationen an den anfragenden Client senden
+      socket.send(
+        JSON.stringify({ type: "teamUpdate", teamKey: "A", members: teams.A })
+      );
+      socket.send(
+        JSON.stringify({ type: "teamUpdate", teamKey: "B", members: teams.B })
+      );
+      socket.send(
+        JSON.stringify({ type: "teamUpdate", teamKey: "C", members: teams.C })
+      );
+    }
   });
 
-  // Beispiel: WebSocket schließen
-  ws.on("close", () => {
-    console.log("WebSocket Verbindung geschlossen.");
+  socket.on("close", () => {
+    console.log("Client disconnected");
   });
 });
 
-// Starten des HTTP-Servers
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server läuft auf Port ${PORT}.`);
-});
+console.log("WebSocket server is running on ws://localhost:8081");
