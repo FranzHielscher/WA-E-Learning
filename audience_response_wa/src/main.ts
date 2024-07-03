@@ -5,7 +5,6 @@ console.log("Script started successfully");
 
 let currentPopup: any = undefined;
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 interface Team {
   name: string;
   members: string[];
@@ -69,8 +68,6 @@ socket.onmessage = (event) => {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 let deactivatedAreas: { [key: string]: boolean } = {
   "Infotafel-Quizraum": false,
   "Infotafel-Conference": false,
@@ -92,168 +89,41 @@ function isAreaDeactivated(area: string): boolean {
   return deactivatedAreas[area] === true;
 }
 
-//Variable zum Hochzählen je nach Fortschritt auf der Map
-let progressCounter = 0;
-
-let team1 = 0;
-let team2 = 0;
-let team3 = 0;
-
-function asignTeamA() {
-  if (team1 <= 2) {
-    team1 += 1;
-  } else {
-    console.log("Team A ist voll!");
-  }
-}
-function asignTeamB() {
-  if (team2 <= 2) {
-    team2 += 1;
-  } else {
-    console.log("Team B ist voll!");
-  }
-}
-function asignTeamC() {
-  if (team3 <= 2) {
-    team3 += 1;
-  } else {
-    console.log("Team C ist voll!");
-  }
-}
-
-function checkIfAlreadySignedA() {
-  if ((team1 || team2 || team3) > 0) {
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  } else {
-    asignTeamA();
-
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  }
-}
-function checkIfAlreadySignedB() {
-  if ((team1 || team2 || team3) > 0) {
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  } else {
-    asignTeamB();
-
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  }
-}
-
-function checkIfAlreadySignedC() {
-  if ((team1 || team2 || team3) > 0) {
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  } else {
-    asignTeamC();
-    currentPopup.close();
-    WA.controls.restorePlayerControls();
-  }
-}
-
 // Waiting for the API to be ready
 WA.onInit()
   .then(() => {
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    WA.room.area.onEnter("teamAZone").subscribe(() => {
+    //Einschreibung in die verschiedenen Teams
+    WA.room.area.onEnter("teamRotZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
-        "teamAZone-Pop-Up",
-        "Sie sind Team A beigetreten",
+        "teamRotZone-Pop-Up",
+        "Sie sind Team Rot beigetreten",
         []
       );
-      joinTeam("A");
+      joinTeam("Rot");
     });
 
-    WA.room.area.onEnter("teamBZone").subscribe(() => {
+    WA.room.area.onEnter("teamBlauZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
-        "teamBZone-Pop-Up",
-        "Sie sind Team B beigetreten",
+        "teamBlauZone-Pop-Up",
+        "Sie sind Team Blau beigetreten",
         []
       );
-      joinTeam("B");
+      joinTeam("Blau");
     });
 
-    WA.onEnterZone("teamBZone", () => {
-      joinTeam("B");
-    });
-
-    WA.onEnterZone("teamCZone", () => {
-      joinTeam("C");
-    });
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    WA.room.area.onEnter("Infotafel-Mainhall").subscribe(() => {
-      WA.controls.disablePlayerControls();
-      progressCounter = 1;
+    WA.room.area.onEnter("teamGrünZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
-        "Mainhall-Pop-Up",
-        "Willkommen in der Haupthalle, tritt einem Team bei!",
-        [
-          {
-            label: "Team A" + " " + team1 + " / 3",
-            callback: () => {
-              checkIfAlreadySignedA();
-            },
-          },
-          {
-            label: "Team B" + " " + team2 + " / 3",
-            callback: () => {
-              checkIfAlreadySignedB();
-            },
-          },
-          {
-            label: "Team C" + " " + team3 + " / 3",
-            callback: () => {
-              checkIfAlreadySignedC();
-            },
-          },
-        ]
+        "teamGrünZone-Pop-Up",
+        "Sie sind Team Grün beigetreten",
+        []
       );
+      joinTeam("Grün");
     });
 
-    WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
-      WA.controls.disablePlayerControls();
-      if (progressCounter < 1) {
-        currentPopup = WA.ui.openPopup(
-          "Labyrinth-Pop-Up",
-          "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!" +
-            progressCounter,
-          [
-            {
-              label: "Verstanden",
-              callback: () => {
-                WA.controls.restorePlayerControls();
-                currentPopup.close();
-              },
-            },
-          ]
-        );
-      } else {
-        currentPopup = WA.ui.openPopup(
-          "Labyrinth-Pop-Up",
-          "Sei vorsichtig und verlasse nie den Pfad!",
-          [
-            {
-              label: "Verstanden",
-              callback: () => {
-                WA.controls.restorePlayerControls();
-                currentPopup.close();
-              },
-            },
-          ]
-        );
-      }
-    });
-
+    //Jitsi Meeting Räume für die conference.tmj
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
         "JitsiMeetingPopup1",
@@ -281,6 +151,7 @@ WA.onInit()
     });
     WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
 
+    //Infotafeln für die Wege
     WA.room.area.onEnter("Infotafel").subscribe(() => {
       WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
@@ -290,7 +161,6 @@ WA.onInit()
           {
             label: "Alles gelesen",
             callback: () => {
-              // Hier kannst du die Aktion hinzufügen, die bei Klick auf den Button ausgeführt wird
               WA.controls.restorePlayerControls();
               currentPopup.close();
             },
@@ -315,7 +185,33 @@ WA.onInit()
         ]
       );
     });
-    /*WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
+
+    WA.room.area.onEnter("Infotafel-Mainhall").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Mainhall-Pop-Up",
+        "Willkommen in der Haupthalle, tritt einem Team bei!",
+        []
+      );
+    });
+
+    WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      currentPopup = WA.ui.openPopup(
+        "Labyrinth-Pop-Up",
+        "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!",
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
+      );
+    });
+    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
       WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "Conference-Pop-Up",
@@ -330,11 +226,8 @@ WA.onInit()
           },
         ]
       );
-    });*/
-    WA.room.area.onEnter("Infotafel").subscribe(() => {
-      deactivateArea("Infotafel-Quizraum");
-      WA.room.hideLayer("collisionsRooms");
     });
+
     WA.room.area.onEnter("Infotafel-Quizraum").subscribe(() => {
       if (isAreaDeactivated("Infotafel-Quizraum")) {
         console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
@@ -376,6 +269,7 @@ WA.onInit()
         );
       }
     });
+
     WA.room.area.onEnter("Zum Quizraum").subscribe(() => {
       if (isAreaDeactivated("Zum Quizraum")) {
         console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
@@ -533,15 +427,6 @@ WA.onInit()
       .catch((e) => console.error(e));
   })
   .catch((e) => console.error(e));
-
-function customizePopUpStyle() {
-  if (currentPopup !== undefined) {
-    let popupElement = currentPopup.getElement();
-    if (popupElement) {
-      popupElement.classList.add("pop-up-content"); // Beispiel für CSS-Klasse
-    }
-  }
-}
 
 function closePopup() {
   if (currentPopup !== undefined) {
