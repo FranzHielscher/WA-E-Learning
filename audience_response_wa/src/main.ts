@@ -18,11 +18,22 @@ const teams: { [key: string]: Team } = {
   C: { name: "Team C", members: [] },
 };
 
-// Funktion zum Beitritt eines Teams
 function joinTeam(teamKey: string) {
   const team = teams[teamKey];
   const playerName = WA.player.name;
 
+  // Überprüfen, ob der Spieler bereits in einem Team ist
+  for (const key in teams) {
+    if (teams[key].members.includes(playerName)) {
+      WA.chat.sendChatMessage(
+        `${playerName}, you are already in ${teams[key].name}`,
+        playerName
+      );
+      return; // Beende die Funktion, da der Spieler bereits in einem Team ist
+    }
+  }
+
+  // Füge den Spieler dem Team hinzu, wenn er noch keinem Team angehört
   if (team.members.length < 4) {
     if (!team.members.includes(playerName)) {
       team.members.push(playerName);
@@ -153,7 +164,6 @@ WA.onInit()
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     WA.room.area.onEnter("teamAZone").subscribe(() => {
-      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamAZone-Pop-Up",
         "Sie sind Team A beigetreten",
@@ -161,12 +171,14 @@ WA.onInit()
       );
       joinTeam("A");
     });
-    WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
+
+    WA.room.area.onEnter("teamBZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
-        "teamAZone-Pop-Up",
-        "Welcome to Jitsi!",
+        "teamBZone-Pop-Up",
+        "Sie sind Team B beigetreten",
         []
       );
+      joinTeam("B");
     });
 
     WA.onEnterZone("teamBZone", () => {
