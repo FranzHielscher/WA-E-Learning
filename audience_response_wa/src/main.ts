@@ -299,13 +299,16 @@ WA.onInit()
     WA.room.area.onLeave("Infotafel-Quizergebnis").subscribe(closePopup);
 
     WA.room.area.onEnter("l1s1").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "l1s1popup",
-        '<img src="bild.png" alt="Willkommensbild" style="max-width: 100%; height: auto;">',
-        []
-      );
+      currentPopup = WA.ui.modal.openModal({
+          title: "Bild anzeigen",
+          src: 'url vom bild', // Ersetze durch die tatsächliche URL deines Bildes
+          allow: "fullscreen",
+          allowApi: true,
+          position: "center",
+      }, () => {
+          console.info('The modal was closed');
+      });
     });
-
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
 
     WA.room.area.onEnter("wegweiser").subscribe(() => {
