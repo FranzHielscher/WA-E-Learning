@@ -8,8 +8,86 @@ let currentPopup: any = undefined;
 let deactivatedAreas: { [key: string]: boolean } = {
   "Infotafel-Quizraum": false,
   "Infotafel-Conference": false,
-  "Zum Quizraum": false,
+  "Infotafel-Mainhall": false,
 };
+
+// Funktion zum Deaktivieren einer Area
+function deactivateArea(area: string) {
+  deactivatedAreas[area] = true;
+}
+
+// Funktion zum Aktivieren einer Area
+function activateArea(area: string) {
+  deactivatedAreas[area] = false;
+}
+
+// Funktion, die prüft, ob eine Area deaktiviert ist
+function isAreaDeactivated(area: string): boolean {
+  return deactivatedAreas[area] === true;
+}
+
+//Variable zum Hochzählen je nach Fortschritt auf der Map
+let progressCounter = 0;
+
+let team1 = 0;
+let team2 = 0;
+let team3 = 0;
+
+function asignTeamA() {
+  if (team1 <= 2) {
+    team1 += 1;
+  } else {
+    console.log("Team A ist voll!");
+  }
+}
+function asignTeamB() {
+  if (team2 <= 2) {
+    team2 += 1;
+  } else {
+    console.log("Team B ist voll!");
+  }
+}
+function asignTeamC() {
+  if (team3 <= 2) {
+    team3 += 1;
+  } else {
+    console.log("Team C ist voll!");
+  }
+}
+
+function checkIfAlreadySignedA() {
+  if ((team1 || team2 || team3) > 0) {
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  } else {
+    asignTeamA();
+
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  }
+}
+function checkIfAlreadySignedB() {  
+  if ((team1 || team2 || team3) > 0) {
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  } else {
+    asignTeamB();
+
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  }
+}
+
+function checkIfAlreadySignedC() {
+  if ((team1 || team2 || team3) > 0) {
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  } else {
+    asignTeamC();
+    currentPopup.close();
+    WA.controls.restorePlayerControls();
+  }
+}
 
 // Waiting for the API to be ready
 WA.onInit()
@@ -17,20 +95,68 @@ WA.onInit()
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
 
-    // Funktion zum Deaktivieren einer Area
-    function deactivateArea(area: string) {
-      deactivatedAreas[area] = true;
-    }
+    WA.room.area.onEnter("Infotafel-Mainhall").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      progressCounter = 1;
+      currentPopup = WA.ui.openPopup(
+        "Mainhall-Pop-Up",
+        "Willkommen in der Haupthalle, tritt einem Team bei!",
+        [
+          {
+            label: "Team A" + " " + team1 + " / 3",
+            callback: () => {
+              checkIfAlreadySignedA();
+            },
+          },
+          {
+            label: "Team B" + " " + team2 + " / 3",
+            callback: () => {
+              checkIfAlreadySignedB();
+            },
+          },
+          {
+            label: "Team C" + " " + team3 + " / 3",
+            callback: () => {
+              checkIfAlreadySignedC();
+            },
+          },
+        ]
+      );
+    });
 
-    // Funktion zum Aktivieren einer Area
-    function activateArea(area: string) {
-      deactivatedAreas[area] = false;
-    }
-
-    // Funktion, die prüft, ob eine Area deaktiviert ist
-    function isAreaDeactivated(area: string): boolean {
-      return deactivatedAreas[area] === true;
-    }
+    WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
+      WA.controls.disablePlayerControls();
+      if (progressCounter < 1) {
+        currentPopup = WA.ui.openPopup(
+          "Labyrinth-Pop-Up",
+          "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!" +
+            progressCounter,
+          [
+            {
+              label: "Verstanden",
+              callback: () => {
+                WA.controls.restorePlayerControls();
+                currentPopup.close();
+              },
+            },
+          ]
+        );
+      } else {
+        currentPopup = WA.ui.openPopup(
+          "Labyrinth-Pop-Up",
+          "Sei vorsichtig und verlasse nie den Pfad!",
+          [
+            {
+              label: "Verstanden",
+              callback: () => {
+                WA.controls.restorePlayerControls();
+                currentPopup.close();
+              },
+            },
+          ]
+        );
+      }
+    });
 
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -76,22 +202,7 @@ WA.onInit()
         ]
       );
     });
-    WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
-      WA.controls.disablePlayerControls();
-      currentPopup = WA.ui.openPopup(
-        "Labyrinth-Pop-Up",
-        "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!",
-        [
-          {
-            label: "Verstanden",
-            callback: () => {
-              WA.controls.restorePlayerControls();
-              currentPopup.close();
-            },
-          },
-        ]
-      );
-    });
+
     WA.room.area.onEnter("Infotafel-Haupthalle").subscribe(() => {
       WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
@@ -126,11 +237,8 @@ WA.onInit()
     });*/
     WA.room.area.onEnter("Infotafel").subscribe(() => {
       deactivateArea("Infotafel-Quizraum");
-      deactivateArea("Infotafel-Conference");
-      deactivateArea("Zum Quizraum");
+      WA.room.hideLayer("collisionsRooms");
     });
-
-    // Event-Listener für Area2
     WA.room.area.onEnter("Infotafel-Quizraum").subscribe(() => {
       if (isAreaDeactivated("Infotafel-Quizraum")) {
         console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
@@ -138,7 +246,7 @@ WA.onInit()
         WA.controls.disablePlayerControls();
         currentPopup = WA.ui.openPopup(
           "Quizraum-Pop-Up",
-          "Die Erdäpfel sind leider noch nicht erntereif!",
+          "Der Quizraum kann noch nicht betreten werden!",
           [
             {
               label: "Schade",
