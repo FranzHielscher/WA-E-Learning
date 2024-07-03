@@ -301,7 +301,7 @@ WA.onInit()
     WA.room.area.onEnter("l1s1").subscribe(() => {
       currentPopup = WA.ui.modal.openModal({
           title: "Bild anzeigen",
-          src: 'https://mxritzzxllnxr.github.io/images/test.jpg', // Ersetze durch die tatsächliche URL deines Bildes
+          src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG', // Ersetze durch die tatsächliche URL deines Bildes
           allow: "fullscreen",
           allowApi: true,
           position: "center",
