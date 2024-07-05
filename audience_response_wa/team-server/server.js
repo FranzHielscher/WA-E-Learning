@@ -3,9 +3,10 @@ const WebSocket = require("ws");
 const server = new WebSocket.Server({ port: 8081 });
 
 let teams = {
-  A: [],
-  B: [],
-  C: [],
+  Rot: [],
+  Blau: [],
+  Grün: [],
+  Gelb: [],
 };
 
 server.on("connection", (socket) => {
@@ -13,20 +14,23 @@ server.on("connection", (socket) => {
 
   // Wenn ein Client verbunden wird, senden wir die aktuellen Team-Informationen
   socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "A", members: teams.A })
+    JSON.stringify({ type: "teamUpdate", teamKey: "Rot", members: teams.Rot })
   );
   socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "B", members: teams.B })
+    JSON.stringify({ type: "teamUpdate", teamKey: "Blau", members: teams.Blau })
   );
   socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "C", members: teams.C })
+    JSON.stringify({ type: "teamUpdate", teamKey: "Grün", members: teams.Grün })
+  );
+  socket.send(
+    JSON.stringify({ type: "teamUpdate", teamKey: "Gelb", members: teams.Gelb })
   );
 
   socket.on("message", (message) => {
     const data = JSON.parse(message);
 
     if (data.type === "joinTeam") {
-      if (teams[data.teamKey].length < 4) {
+      if (teams[data.teamKey].length < 3) {
         teams[data.teamKey].push(data.playerName);
         // Aktualisierte Team-Informationen an alle Clients senden
         server.clients.forEach((client) => {
@@ -44,13 +48,32 @@ server.on("connection", (socket) => {
     } else if (data.type === "requestTeams") {
       // Aktuelle Team-Informationen an den anfragenden Client senden
       socket.send(
-        JSON.stringify({ type: "teamUpdate", teamKey: "A", members: teams.A })
+        JSON.stringify({
+          type: "teamUpdate",
+          teamKey: "Rot",
+          members: teams.Rot,
+        })
       );
       socket.send(
-        JSON.stringify({ type: "teamUpdate", teamKey: "B", members: teams.B })
+        JSON.stringify({
+          type: "teamUpdate",
+          teamKey: "Blau",
+          members: teams.Blau,
+        })
       );
       socket.send(
-        JSON.stringify({ type: "teamUpdate", teamKey: "C", members: teams.C })
+        JSON.stringify({
+          type: "teamUpdate",
+          teamKey: "Grün",
+          members: teams.Grün,
+        })
+      );
+      socket.send(
+        JSON.stringify({
+          type: "teamUpdate",
+          teamKey: "Gelb",
+          members: teams.Gelb,
+        })
       );
     }
   });

@@ -1,6 +1,8 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
+import { addHudFrame } from "hudframe.js";
+
 console.log("Script started successfully");
 
 let currentPopup: any = undefined;
@@ -12,14 +14,16 @@ interface Team {
 
 // Initialisierung der Teams
 const teams: { [key: string]: Team } = {
-  A: { name: "Team A", members: [] },
-  B: { name: "Team B", members: [] },
-  C: { name: "Team C", members: [] },
+  Rot: { name: "Team Rot", members: [] },
+  Blau: { name: "Team Blau", members: [] },
+  Grün: { name: "Team Grün", members: [] },
+  Gelb: { name: "Team Gelb", members: [] },
 };
 
 function joinTeam(teamKey: string) {
   const team = teams[teamKey];
   const playerName = WA.player.name;
+  let inTeam = false;
 
   // Überprüfen, ob der Spieler bereits in einem Team ist
   for (const key in teams) {
@@ -69,9 +73,10 @@ socket.onmessage = (event) => {
 };
 
 let deactivatedAreas: { [key: string]: boolean } = {
-  "Infotafel-Quizraum": false,
-  "Infotafel-Conference": false,
-  "Infotafel-Mainhall": false,
+  "teamGrünZone-Pop-Up": false,
+  "teamRotZone-Pop-Up": false,
+  "teamGelbZone-Pop-Up": false,
+  "teamBlauZone-Pop-Up": false,
 };
 
 // Funktion zum Deaktivieren einer Area
@@ -89,6 +94,20 @@ function isAreaDeactivated(area: string): boolean {
   return deactivatedAreas[area] === true;
 }
 
+function loadHudFrame() {
+  fetch("overlay.html")
+    .then((response) => response.text())
+    .then((data) => {
+      const div = document.createElement("div");
+      div.innerHTML = data;
+      document.body.appendChild(div.firstChild);
+    })
+    .catch((error) => console.error("Error loading HUD frame:", error));
+}
+
+// Rufe die Funktion auf, wenn das Skript geladen wird
+loadHudFrame();
+
 // Waiting for the API to be ready
 WA.onInit()
   .then(() => {
@@ -103,7 +122,9 @@ WA.onInit()
         []
       );
       joinTeam("Rot");
+      deactivateArea("teamGrünZone-Pop-Up");
     });
+    WA.room.area.onLeave("teamRotZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamBlauZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -113,6 +134,7 @@ WA.onInit()
       );
       joinTeam("Blau");
     });
+    WA.room.area.onLeave("teamBlauZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamGrünZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -122,6 +144,17 @@ WA.onInit()
       );
       joinTeam("Grün");
     });
+    WA.room.area.onLeave("teamGrünZone").subscribe(closePopup);
+
+    WA.room.area.onEnter("teamGelbZone").subscribe(() => {
+      currentPopup = WA.ui.openPopup(
+        "teamGelbZone-Pop-Up",
+        "Sie sind Team Gelb beigetreten",
+        []
+      );
+      joinTeam("Gelb");
+    });
+    WA.room.area.onLeave("teamGelbZone").subscribe(closePopup);
 
     //Jitsi Meeting Räume für die conference.tmj
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
@@ -191,7 +224,15 @@ WA.onInit()
       currentPopup = WA.ui.openPopup(
         "Mainhall-Pop-Up",
         "Willkommen in der Haupthalle, tritt einem Team bei!",
-        []
+        [
+          {
+            label: "Verstanden",
+            callback: () => {
+              WA.controls.restorePlayerControls();
+              currentPopup.close();
+            },
+          },
+        ]
       );
     });
 
