@@ -1,5 +1,6 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
+import { Popup } from "@workadventure/iframe-api-typings";
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
 import { addHudFrame } from "hudframe.js";
 
@@ -290,27 +291,6 @@ WA.onInit()
       }
     });
 
-    WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
-      if (isAreaDeactivated("Infotafel-Conference")) {
-        console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
-      } else {
-        WA.controls.disablePlayerControls();
-        currentPopup = WA.ui.openPopup(
-          "Conference-Pop-Up",
-          "Die Erdäpfel sind leider noch nicht erntereif!",
-          [
-            {
-              label: "Schade",
-              callback: () => {
-                WA.controls.restorePlayerControls();
-                currentPopup.close();
-              },
-            },
-          ]
-        );
-      }
-    });
-
     WA.room.area.onEnter("Zum Quizraum").subscribe(() => {
       if (isAreaDeactivated("Zum Quizraum")) {
         console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
@@ -361,14 +341,18 @@ WA.onInit()
     WA.room.area.onLeave("Infotafel-Quizergebnis").subscribe(closePopup);
 
     WA.room.area.onEnter("l1s1").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "l1s1popup",
-        '<img src="bild.png" alt="Willkommensbild" style="max-width: 100%; height: auto;">',
-        []
-      );
+      currentPopup = WA.ui.modal.openModal({
+          title: "Bild anzeigen",
+          src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG', // Ersetze durch die tatsächliche URL deines Bildes
+          allow: "fullscreen",
+          allowApi: true,
+          position: "center",
+      }, () => {
+          console.info('The modal was closed');
+      });
     });
-
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
+    
 
     WA.room.area.onEnter("wegweiser").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -427,38 +411,56 @@ WA.onInit()
 
     WA.room.area.onLeave("clock").subscribe(closePopup);
 
+    //Countdown
+    let countdownTime = 10 * 60; // 10 minutes in seconds
+    let countdownInterval: string | number | NodeJS.Timeout | null | undefined;
+    let isCountdownRunning = false; // Variable to track if the countdown is already running
+    let currentPopup: Popup | null = null;
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    }
+
+    function updateCountdown() {
+      countdownTime--;
+
+      if (countdownTime < 0) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        return;
+      }
+    }
+
+    function showPopup() {
+      currentPopup = WA.ui.openPopup(
+        "countdownpopup",
+        `Countdown: ${formatTime(countdownTime)}`,
+        []
+      );
+    }
+
+    function startCountdown() {
+      if (!isCountdownRunning) {
+        isCountdownRunning = true;
+        countdownInterval = setInterval(updateCountdown, 1000); // Update countdown every second
+      }
+    }
+
     WA.room.area.onEnter("countdown").subscribe(() => {
-      let countdownTime = 10 * 60; // 10 minutes in seconds
-
-      function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${
-          remainingSeconds < 10 ? "0" : ""
-        }${remainingSeconds}`;
-      }
-
-      function updatePopup() {
-        currentPopup = WA.ui.openPopup(
-          "countdownpopup",
-          `Countdown: ${formatTime(countdownTime)}`,
-          []
-        );
-      }
-      updatePopup(); // Initial popup with the full countdown time
-
-      const countdownInterval = setInterval(() => {
-        countdownTime--;
-
-        if (countdownTime < 0) {
-          clearInterval(countdownInterval);
-          return;
-        }
-
-        updatePopup();
-      }, 1000); // Update every second
+      startCountdown();
+      showPopup();
     });
-    WA.room.area.onLeave("countdown").subscribe(closePopup);
+
+    WA.room.area.onLeave("countdown").subscribe(() => {
+      if (currentPopup) {
+        currentPopup.close();
+        currentPopup = null;
+      }
+    });
+    //Countdown ende
+
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()
