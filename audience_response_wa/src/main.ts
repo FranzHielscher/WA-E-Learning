@@ -26,7 +26,7 @@ function joinTeam(teamKey: string) {
     for (const key in teams) {
         if (teams[key].members.includes(playerName)) {
             WA.chat.sendChatMessage(
-                ${playerName}, you are already in ${teams[key].name},
+                `${playerName}, you are already in ${teams[key].name}`,
                 playerName
         );
             return;
@@ -39,17 +39,17 @@ function joinTeam(teamKey: string) {
             team.members.push(playerName);
             socket.send(JSON.stringify({ type: "joinTeam", teamKey, playerName }));
             WA.chat.sendChatMessage(
-                ${playerName} has joined ${team.name},
+                `${playerName} has joined ${team.name}`,
                 playerName
         );
         } else {
             WA.chat.sendChatMessage(
-                ${playerName}, you are already in ${team.name},
+                `${playerName}, you are already in ${team.name}`,
                 playerName
         );
         }
     } else {
-        WA.chat.sendChatMessage(Sorry, ${team.name} is full., playerName);
+        WA.chat.sendChatMessage(`Sorry, ${team.name} is full., playerName`);
     }
 }
 
@@ -116,7 +116,7 @@ let isCountdownRunning = false;
 function formatTime(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return ${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds};
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 }
 
 function updateCountdown() {
@@ -133,7 +133,7 @@ function updateCountdown() {
         // Reopen the popup with updated content
         currentPopup = WA.ui.openPopup(
             "countdownPopup",  // Ensure you have a unique identifier
-            Countdown ${formatTime(countdownTime)},
+            Countdown `${formatTime(countdownTime)}`,
             []
         );
     } else {
@@ -147,7 +147,7 @@ function showPopup() {
     }
     currentPopup = WA.ui.openPopup(
         "countdownpopup",
-        Countdown ${formatTime(countdownTime)},
+        Countdown `${formatTime(countdownTime)}`,
         []
     );
 }
@@ -184,19 +184,19 @@ WA.onInit()
 
         for (const [area, teamKey] of Object.entries(teamZones)) {
             WA.room.area.onEnter(area).subscribe(() => {
-                if (!isAreaDeactivated(${teamKey}Zone-Pop-Up)) {
+                if (!isAreaDeactivated(`${teamKey}Zone-Pop-Up`)) {
                     currentPopup = WA.ui.openPopup(
-                        ${teamKey}Zone-Pop-Up,
-                        Sie sind Team ${teamKey} beigetreten,
+                        `${teamKey}Zone-Pop-Up`,
+                        `Sie sind Team ${teamKey} beigetreten`,
                         []
                 );
                     joinTeam(teamKey);
-                    deactivateArea(${teamKey}Zone-Pop-Up);
+                    deactivateArea(`${teamKey}Zone-Pop-Up`);
                 }
             });
             WA.room.area.onLeave(area).subscribe(() => {
                 closePopup();
-                activateArea(${teamKey}Zone-Pop-Up);
+                activateArea(`${teamKey}Zone-Pop-Up`);
             });
         }
 
