@@ -200,6 +200,24 @@ WA.onInit()
             });
         }
 
+        // Teleportation areas
+        const teleporters = {
+            "teleporter2": { x: 30.50, y: 605.50 }, // Destination for Teleporter 2
+            "teleporter1": { x: 30.50, y: 382.50 }  // Destination for Teleporter 1
+        };
+
+        // Iterate over the teleporters and set up area event handlers
+        for (const [area, position] of Object.entries(teleporters)) {
+            WA.room.area.onEnter(area).subscribe(() => {
+                // Check if the teleport function is available
+                if (typeof WA.player.teleport === 'function') {
+                    WA.player.teleport(position.x, position.y);
+                } else {
+                    console.error('WA.player.teleport function is not available.');
+                }
+            });
+        }
+
         // Handle special zones including countdown
         const specialZones = [
             { area: "JitsiMeeting1", popup: "JitsiMeetingPopup1", message: "Welcome to Jitsi!" },
