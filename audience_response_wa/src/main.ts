@@ -133,7 +133,7 @@ function updateCountdown() {
         // Reopen the popup with updated content
         currentPopup = WA.ui.openPopup(
             "countdownPopup",  // Ensure you have a unique identifier
-            Countdown `${formatTime(countdownTime)}`,
+            `Countdown ${formatTime(countdownTime)}`,
             []
         );
     } else {
@@ -147,7 +147,7 @@ function showPopup() {
     }
     currentPopup = WA.ui.openPopup(
         "countdownpopup",
-        Countdown `${formatTime(countdownTime)}`,
+        `Countdown ${formatTime(countdownTime)}`,
         []
     );
 }
@@ -197,6 +197,24 @@ WA.onInit()
             WA.room.area.onLeave(area).subscribe(() => {
                 closePopup();
                 activateArea(`${teamKey}Zone-Pop-Up`);
+            });
+        }
+
+        // Teleportation areas
+        const teleporters = {
+            "teleporter2": { x: 30.50, y: 605.50 }, // Destination for Teleporter 2
+            "teleporter1": { x: 30.50, y: 382.50 }  // Destination for Teleporter 1
+        };
+
+        // Iterate over the teleporters and set up area event handlers
+        for (const [area, position] of Object.entries(teleporters)) {
+            WA.room.area.onEnter(area).subscribe(() => {
+                // Check if the teleport function is available
+                if (typeof WA.player.teleport === 'function') {
+                    WA.player.teleport(position.x, position.y);
+                } else {
+                    console.error('WA.player.teleport function is not available.');
+                }
             });
         }
 
