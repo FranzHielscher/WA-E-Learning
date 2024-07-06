@@ -674,8 +674,8 @@
                  "type":"",
                  "visible":true,
                  "width":93.7162,
-                 "x":512.998395468278,
-                 "y":-21.3925623867069
+                 "x":480.363174197107,
+                 "y":62.6431323865584
                 }, 
                 {
                  "height":154.393252769386,
@@ -889,7 +889,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
