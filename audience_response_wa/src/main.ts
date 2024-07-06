@@ -13,6 +13,8 @@ interface Team {
   members: string[];
 }
 
+let teamData: { [key: string]: string[] } = {};
+
 // Initialisierung der Teams
 const teams: { [key: string]: Team } = {
   Rot: { name: "Team Rot", members: [] },
@@ -73,6 +75,31 @@ socket.onmessage = (event) => {
   }
 };
 
+function displayTeamsInChat() {
+  let message = "Aktuelle Team-Mitglieder:\n";
+
+  // Durchlaufe jedes Team
+  Object.keys(teams).forEach((teamKey) => {
+    const team = teams[teamKey];
+
+    // Füge den Teamnamen und die Mitglieder dem Nachrichtenstring hinzu
+    message += `${team.name}:\n`;
+    team.members.forEach((member, index) => {
+      message += ` - ${member}`;
+
+      // Füge ein Komma hinzu, außer beim letzten Mitglied
+      if (index < team.members.length - 1) {
+        message += ", ";
+      } else {
+        message += "\n"; // Neue Zeile nach dem letzten Mitglied
+      }
+    });
+  });
+
+  // Sende die Nachricht in den Chat
+  WA.chat.sendChatMessage(message);
+}
+
 let deactivatedAreas: { [key: string]: boolean } = {
   "teamGrünZone-Pop-Up": false,
   "teamRotZone-Pop-Up": false,
@@ -117,45 +144,80 @@ WA.onInit()
 
     //Einschreibung in die verschiedenen Teams
     WA.room.area.onEnter("teamRotZone").subscribe(() => {
+      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamRotZone-Pop-Up",
         "Sie sind Team Rot beigetreten",
-        []
+        [
+          {
+            label: "Beitreten",
+            callback: () => {
+              currentPopup.close();
+              WA.controls.restorePlayerControls();
+            },
+          },
+        ]
       );
       joinTeam("Rot");
-      deactivateArea("teamGrünZone-Pop-Up");
+      displayTeamsInChat();
     });
-    WA.room.area.onLeave("teamRotZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamBlauZone").subscribe(() => {
+      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamBlauZone-Pop-Up",
         "Sie sind Team Blau beigetreten",
-        []
+        [
+          {
+            label: "Beitreten",
+            callback: () => {
+              currentPopup.close();
+              WA.controls.restorePlayerControls();
+            },
+          },
+        ]
       );
       joinTeam("Blau");
+      displayTeamsInChat();
     });
-    WA.room.area.onLeave("teamBlauZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamGrünZone").subscribe(() => {
+      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamGrünZone-Pop-Up",
         "Sie sind Team Grün beigetreten",
-        []
+        [
+          {
+            label: "Beitreten",
+            callback: () => {
+              currentPopup.close();
+              WA.controls.restorePlayerControls();
+            },
+          },
+        ]
       );
       joinTeam("Grün");
+      displayTeamsInChat();
     });
-    WA.room.area.onLeave("teamGrünZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamGelbZone").subscribe(() => {
+      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamGelbZone-Pop-Up",
         "Sie sind Team Gelb beigetreten",
-        []
+        [
+          {
+            label: "Beitreten",
+            callback: () => {
+              currentPopup.close();
+              WA.controls.restorePlayerControls();
+            },
+          },
+        ]
       );
       joinTeam("Gelb");
+      displayTeamsInChat();
     });
-    WA.room.area.onLeave("teamGelbZone").subscribe(closePopup);
 
     //Jitsi Meeting Räume für die conference.tmj
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
@@ -341,18 +403,20 @@ WA.onInit()
     WA.room.area.onLeave("Infotafel-Quizergebnis").subscribe(closePopup);
 
     WA.room.area.onEnter("l1s1").subscribe(() => {
-      currentPopup = WA.ui.modal.openModal({
+      currentPopup = WA.ui.modal.openModal(
+        {
           title: "Bild anzeigen",
-          src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG', // Ersetze durch die tatsächliche URL deines Bildes
+          src: "https://mxritzzxllnxr.github.io/images/l1s1.PNG", // Ersetze durch die tatsächliche URL deines Bildes
           allow: "fullscreen",
           allowApi: true,
           position: "center",
-      }, () => {
-          console.info('The modal was closed');
-      });
+        },
+        () => {
+          console.info("The modal was closed");
+        }
+      );
     });
     WA.room.area.onLeave("l1s1").subscribe(closePopup);
-    
 
     WA.room.area.onEnter("wegweiser").subscribe(() => {
       currentPopup = WA.ui.openPopup(
@@ -400,16 +464,19 @@ WA.onInit()
     WA.room.area.onLeave("backtopark").subscribe(closePopup);
 
     WA.room.area.onEnter("clock").subscribe(() => {
+      WA.controls.disablePlayerControls();
       const today = new Date();
       const time = today.getHours() + ":" + today.getMinutes();
-      currentPopup = WA.ui.openPopup(
-        "clock-Pop-Up",
-        "The time is: " + time,
-        []
-      );
+      currentPopup = WA.ui.openPopup("clock-Pop-Up", "It's " + time, [
+        {
+          label: "Okay",
+          callback: () => {
+            WA.controls.restorePlayerControls();
+            currentPopup.close();
+          },
+        },
+      ]);
     });
-
-    WA.room.area.onLeave("clock").subscribe(closePopup);
 
     //Countdown
     let countdownTime = 10 * 60; // 10 minutes in seconds
@@ -420,7 +487,9 @@ WA.onInit()
     function formatTime(seconds) {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
-      return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+      return `${minutes}:${
+        remainingSeconds < 10 ? "0" : ""
+      }${remainingSeconds}`;
     }
 
     function updateCountdown() {
@@ -460,7 +529,6 @@ WA.onInit()
       }
     });
     //Countdown ende
-
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra()
