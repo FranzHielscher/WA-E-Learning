@@ -1277,6 +1277,17 @@
                  "width":128,
                  "x":128,
                  "y":674.666666666667
+                }, 
+                {
+                 "height":144.379511859745,
+                 "id":92,
+                 "name":"team",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":146.098315572362,
+                 "x":589.549673427295,
+                 "y":574.080440013751
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1348,7 +1359,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":92,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "properties":[
         {

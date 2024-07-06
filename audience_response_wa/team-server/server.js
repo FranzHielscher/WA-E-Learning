@@ -13,18 +13,7 @@ server.on("connection", (socket) => {
   console.log("Client connected");
 
   // Wenn ein Client verbunden wird, senden wir die aktuellen Team-Informationen
-  socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "Rot", members: teams.Rot })
-  );
-  socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "Blau", members: teams.Blau })
-  );
-  socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "Grün", members: teams.Grün })
-  );
-  socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "Gelb", members: teams.Gelb })
-  );
+  sendTeamUpdates(socket);
 
   socket.on("message", (message) => {
     const data = JSON.parse(message);
@@ -47,34 +36,7 @@ server.on("connection", (socket) => {
       }
     } else if (data.type === "requestTeams") {
       // Aktuelle Team-Informationen an den anfragenden Client senden
-      socket.send(
-        JSON.stringify({
-          type: "teamUpdate",
-          teamKey: "Rot",
-          members: teams.Rot,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          type: "teamUpdate",
-          teamKey: "Blau",
-          members: teams.Blau,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          type: "teamUpdate",
-          teamKey: "Grün",
-          members: teams.Grün,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          type: "teamUpdate",
-          teamKey: "Gelb",
-          members: teams.Gelb,
-        })
-      );
+      sendTeamUpdates(socket);
     }
   });
 
@@ -82,5 +44,17 @@ server.on("connection", (socket) => {
     console.log("Client disconnected");
   });
 });
+
+function sendTeamUpdates(socket) {
+  Object.keys(teams).forEach((teamKey) => {
+    socket.send(
+      JSON.stringify({
+        type: "teamUpdate",
+        teamKey: teamKey,
+        members: teams[teamKey],
+      })
+    );
+  });
+}
 
 console.log("WebSocket server is running on ws://localhost:8081");
