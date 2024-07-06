@@ -589,7 +589,7 @@
                         {
                          "name":"openWebsite",
                          "type":"string",
-                         "value":"https:\/\/www.mentimeter.com\/de-DE\/features\/quiz-https:\/\/www.menti.com\/alq2yp43d73c"
+                         "value":"https:\/\/www.menti.com\/alq2yp43d73c"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -738,7 +738,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
