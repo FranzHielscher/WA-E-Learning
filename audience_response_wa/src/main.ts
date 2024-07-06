@@ -41,15 +41,15 @@ function joinTeam(teamKey: string) {
             WA.chat.sendChatMessage(
                 `${playerName} has joined ${team.name}`,
                 playerName
-        );
+            );
         } else {
             WA.chat.sendChatMessage(
                 `${playerName}, you are already in ${team.name}`,
                 playerName
-        );
+            );
         }
     } else {
-        WA.chat.sendChatMessage(`Sorry, ${team.name} is full., playerName`);
+        WA.chat.sendChatMessage(`Sorry, ${team.name} is full.`, playerName);
     }
 }
 
@@ -189,7 +189,7 @@ WA.onInit()
                         `${teamKey}Zone-Pop-Up`,
                         `Sie sind Team ${teamKey} beigetreten`,
                         []
-                );
+                    );
                     joinTeam(teamKey);
                     deactivateArea(`${teamKey}Zone-Pop-Up`);
                 }

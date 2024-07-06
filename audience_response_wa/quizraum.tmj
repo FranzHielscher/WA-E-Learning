@@ -587,9 +587,9 @@
                  "name":"QuizZone",
                  "properties":[
                         {
-                         "name":"json_name",
-                         "type":"file",
-                         "value":"qa-quiz-E-Learning-WA.json"
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/www.mentimeter.com\/de-DE\/features\/quiz-https:\/\/www.menti.com\/alq2yp43d73c"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -606,7 +606,7 @@
                         {
                          "name":"openWebsite",
                          "type":"string",
-                         "value":"https:\/\/u.quizacademy.io\/LGLYNI"
+                         "value":"https:\/\/www.menti.com\/alq2yp43d73c"
                         }],
                  "rotation":0,
                  "type":"area",
