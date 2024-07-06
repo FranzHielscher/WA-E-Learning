@@ -116,12 +116,12 @@ function isAreaDeactivated(area: string): boolean {
   return deactivatedAreas[area];
 }
 
-function closePopup() {
+/*function closePopup() {
   if (currentPopup !== undefined) {
     currentPopup.close();
     currentPopup = undefined;
   }
-}
+}*/
 
 // HUD Frame Loading
 function loadHudFrame() {
@@ -152,9 +152,13 @@ WA.onInit()
         []
       );
       joinTeam("Rot");
-      deactivateArea("teamGrünZone-Pop-Up");
+      displayTeamsInChat();
     });
     WA.room.area.onLeave("teamRotZone").subscribe(closePopup);
+
+    WA.room.area.onEnter("team").subscribe(() => {
+      displayTeamsInChat();
+    });
 
     WA.room.area.onEnter("teamBlauZone").subscribe(() => {
       currentPopup = WA.ui.openPopup(

@@ -9,25 +9,43 @@ let teams = {
   Gelb: [],
 };
 
-// Funktion zum Senden von Teamaktualisierungen an alle verbundenen Clients
-function sendTeamUpdate(teamKey) {
-  server.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: "teamUpdate",
-          teamKey: teamKey,
-          members: teams[teamKey],
-        })
-      );
-    }
-  });
-}
-
 server.on("connection", (socket) => {
   console.log("Client connected");
 
-  // Senden der aktuellen Team-Informationen an den verbundenen Client
+  // Wenn ein Client verbunden wird, senden wir die aktuellen Team-Informationen
+  sendTeamUpdates(socket);
+
+  socket.on("message", (message) => {
+    const data = JSON.parse(message);
+
+    if (data.type === "joinTeam") {
+      if (teams[data.teamKey].length < 3) {
+        teams[data.teamKey].push(data.playerName);
+        // Aktualisierte Team-Informationen an alle Clients senden
+        server.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "teamUpdate",
+                teamKey: data.teamKey,
+                members: teams[data.teamKey],
+              })
+            );
+          }
+        });
+      }
+    } else if (data.type === "requestTeams") {
+      // Aktuelle Team-Informationen an den anfragenden Client senden
+      sendTeamUpdates(socket);
+    }
+  });
+
+  socket.on("close", () => {
+    console.log("Client disconnected");
+  });
+});
+
+function sendTeamUpdates(socket) {
   Object.keys(teams).forEach((teamKey) => {
     socket.send(
       JSON.stringify({
@@ -37,33 +55,6 @@ server.on("connection", (socket) => {
       })
     );
   });
-
-  socket.on("message", (message) => {
-    const data = JSON.parse(message);
-
-    if (data.type === "joinTeam") {
-      if (teams[data.teamKey].length < 4) {
-        // Änderung auf 4, um die Kapazitätsgrenze zu berücksichtigen
-        teams[data.teamKey].push(data.playerName);
-        sendTeamUpdate(data.teamKey); // Teamaktualisierung an alle Clients senden
-      }
-    } else if (data.type === "requestTeams") {
-      // Senden der aktuellen Team-Informationen an den anfragenden Client
-      Object.keys(teams).forEach((teamKey) => {
-        socket.send(
-          JSON.stringify({
-            type: "teamUpdate",
-            teamKey: teamKey,
-            members: teams[teamKey],
-          })
-        );
-      });
-    }
-  });
-
-  socket.on("close", () => {
-    console.log("Client disconnected");
-  });
-});
+}
 
 console.log("WebSocket server is running on ws://localhost:8081");
