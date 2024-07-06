@@ -673,9 +673,9 @@
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":68.3828666666667,
-                 "x":540.331728801611,
-                 "y":-15.3925623867069
+                 "width":93.7162,
+                 "x":512.998395468278,
+                 "y":-21.3925623867069
                 }, 
                 {
                  "height":154.393252769386,
@@ -774,7 +774,7 @@
                 {
                  "height":83.9993,
                  "id":47,
-                 "name":"teamGr\u00fcnZone",
+                 "name":"teamGruenZone",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -796,7 +796,7 @@
                 {
                  "height":59.6673,
                  "id":49,
-                 "name":"teamGr\u00fcnZone-Pop-Up",
+                 "name":"teamGruenZone-Pop-Up",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -889,7 +889,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {

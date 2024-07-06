@@ -1,13 +1,11 @@
-/// <reference types="@workadventure/iframe-api-typings" />
-
 import { Popup } from "@workadventure/iframe-api-typings";
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import { addHudFrame } from "hudframe.js";
 
 console.log("Script started successfully");
 
-let currentPopup: any = undefined;
+let currentPopup: Popup | undefined = undefined;
 
+// Team Management
 interface Team {
   name: string;
   members: string[];
@@ -15,31 +13,29 @@ interface Team {
 
 let teamData: { [key: string]: string[] } = {};
 
-// Initialisierung der Teams
 const teams: { [key: string]: Team } = {
   Rot: { name: "Team Rot", members: [] },
   Blau: { name: "Team Blau", members: [] },
-  Grün: { name: "Team Grün", members: [] },
+  Gruen: { name: "Team Grün", members: [] },
   Gelb: { name: "Team Gelb", members: [] },
 };
 
 function joinTeam(teamKey: string) {
   const team = teams[teamKey];
   const playerName = WA.player.name;
-  let inTeam = false;
 
-  // Überprüfen, ob der Spieler bereits in einem Team ist
+  // Check if player is already in a team
   for (const key in teams) {
     if (teams[key].members.includes(playerName)) {
       WA.chat.sendChatMessage(
         `${playerName}, you are already in ${teams[key].name}`,
         playerName
       );
-      return; // Beende die Funktion, da der Spieler bereits in einem Team ist
+      return;
     }
   }
 
-  // Füge den Spieler dem Team hinzu, wenn er noch keinem Team angehört
+  // Add player to team if not full and not already in the team
   if (team.members.length < 4) {
     if (!team.members.includes(playerName)) {
       team.members.push(playerName);
@@ -59,12 +55,11 @@ function joinTeam(teamKey: string) {
   }
 }
 
-// Verbindung zu einem WebSocket-Server herstellen
+// WebSocket Connection
 const socket = new WebSocket("ws://localhost:8081");
 
 socket.onopen = () => {
   console.log("WebSocket connection established");
-  // Bei Verbindungsaufbau Team-Informationen anfordern
   socket.send(JSON.stringify({ type: "requestTeams" }));
 };
 
@@ -100,35 +95,42 @@ function displayTeamsInChat() {
   WA.chat.sendChatMessage(message);
 }
 
+// Area Management
 let deactivatedAreas: { [key: string]: boolean } = {
-  "teamGrünZone-Pop-Up": false,
+  "teamGruenZone-Pop-Up": false,
   "teamRotZone-Pop-Up": false,
   "teamGelbZone-Pop-Up": false,
   "teamBlauZone-Pop-Up": false,
 };
 
-// Funktion zum Deaktivieren einer Area
+// Manage popup visibility
 function deactivateArea(area: string) {
   deactivatedAreas[area] = true;
 }
 
-// Funktion zum Aktivieren einer Area
 function activateArea(area: string) {
   deactivatedAreas[area] = false;
 }
 
-// Funktion, die prüft, ob eine Area deaktiviert ist
 function isAreaDeactivated(area: string): boolean {
-  return deactivatedAreas[area] === true;
+  return deactivatedAreas[area];
 }
 
+function closePopup() {
+  if (currentPopup !== undefined) {
+    currentPopup.close();
+    currentPopup = undefined;
+  }
+}
+
+// HUD Frame Loading
 function loadHudFrame() {
   fetch("overlay.html")
     .then((response) => response.text())
     .then((data) => {
       const div = document.createElement("div");
       div.innerHTML = data;
-      document.body.appendChild(div.firstChild);
+      document.body.appendChild(div.firstChild as Node);
     })
     .catch((error) => console.error("Error loading HUD frame:", error));
 }
@@ -144,80 +146,45 @@ WA.onInit()
 
     //Einschreibung in die verschiedenen Teams
     WA.room.area.onEnter("teamRotZone").subscribe(() => {
-      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamRotZone-Pop-Up",
         "Sie sind Team Rot beigetreten",
-        [
-          {
-            label: "Beitreten",
-            callback: () => {
-              currentPopup.close();
-              WA.controls.restorePlayerControls();
-            },
-          },
-        ]
+        []
       );
       joinTeam("Rot");
-      displayTeamsInChat();
+      deactivateArea("teamGrünZone-Pop-Up");
     });
+    WA.room.area.onLeave("teamRotZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamBlauZone").subscribe(() => {
-      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamBlauZone-Pop-Up",
         "Sie sind Team Blau beigetreten",
-        [
-          {
-            label: "Beitreten",
-            callback: () => {
-              currentPopup.close();
-              WA.controls.restorePlayerControls();
-            },
-          },
-        ]
+        []
       );
       joinTeam("Blau");
-      displayTeamsInChat();
     });
+    WA.room.area.onLeave("teamBlauZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamGrünZone").subscribe(() => {
-      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamGrünZone-Pop-Up",
         "Sie sind Team Grün beigetreten",
-        [
-          {
-            label: "Beitreten",
-            callback: () => {
-              currentPopup.close();
-              WA.controls.restorePlayerControls();
-            },
-          },
-        ]
+        []
       );
       joinTeam("Grün");
-      displayTeamsInChat();
     });
+    WA.room.area.onLeave("teamGrünZone").subscribe(closePopup);
 
     WA.room.area.onEnter("teamGelbZone").subscribe(() => {
-      WA.controls.disablePlayerControls();
       currentPopup = WA.ui.openPopup(
         "teamGelbZone-Pop-Up",
         "Sie sind Team Gelb beigetreten",
-        [
-          {
-            label: "Beitreten",
-            callback: () => {
-              currentPopup.close();
-              WA.controls.restorePlayerControls();
-            },
-          },
-        ]
+        []
       );
       joinTeam("Gelb");
-      displayTeamsInChat();
     });
+    WA.room.area.onLeave("teamGelbZone").subscribe(closePopup);
 
     //Jitsi Meeting Räume für die conference.tmj
     WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
@@ -464,19 +431,16 @@ WA.onInit()
     WA.room.area.onLeave("backtopark").subscribe(closePopup);
 
     WA.room.area.onEnter("clock").subscribe(() => {
-      WA.controls.disablePlayerControls();
       const today = new Date();
       const time = today.getHours() + ":" + today.getMinutes();
-      currentPopup = WA.ui.openPopup("clock-Pop-Up", "It's " + time, [
-        {
-          label: "Okay",
-          callback: () => {
-            WA.controls.restorePlayerControls();
-            currentPopup.close();
-          },
-        },
-      ]);
+      currentPopup = WA.ui.openPopup(
+        "clock-Pop-Up",
+        "The time is: " + time,
+        []
+      );
     });
+
+    WA.room.area.onLeave("clock").subscribe(closePopup);
 
     //Countdown
     let countdownTime = 10 * 60; // 10 minutes in seconds
@@ -494,18 +458,33 @@ WA.onInit()
 
     function updateCountdown() {
       countdownTime--;
-
       if (countdownTime < 0) {
-        clearInterval(countdownInterval);
+        clearInterval(countdownInterval as NodeJS.Timeout);
         countdownInterval = null;
-        return;
+      }
+
+      if (currentPopup) {
+        currentPopup.close(); // Close the existing popup
+        currentPopup = undefined; // Clear the reference
+
+        // Reopen the popup with updated content
+        currentPopup = WA.ui.openPopup(
+          "countdownPopup", // Ensure you have a unique identifier
+          `Countdown ${formatTime(countdownTime)}`,
+          []
+        );
+      } else {
+        showPopup();
       }
     }
 
     function showPopup() {
+      if (currentPopup) {
+        currentPopup.close();
+      }
       currentPopup = WA.ui.openPopup(
         "countdownpopup",
-        `Countdown: ${formatTime(countdownTime)}`,
+        `Countdown ${formatTime(countdownTime)}`,
         []
       );
     }
