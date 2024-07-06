@@ -58,7 +58,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":21,
          "id":70,
-         "name":"Inofs",
+         "name":"Infos",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -96,7 +96,7 @@
                  "name":"Exit",
                  "opacity":1,
                  "type":"tilelayer",
-                 "visible":false,
+                 "visible":true,
                  "width":31,
                  "x":0,
                  "y":0
@@ -128,7 +128,7 @@
                  "name":"Entry",
                  "opacity":1,
                  "type":"tilelayer",
-                 "visible":false,
+                 "visible":true,
                  "width":31,
                  "x":0,
                  "y":0

@@ -266,10 +266,41 @@ WA.onInit()
             { area: "clock", popup: "clock-Pop-Up", message: '' }
         ];
 
-        specialZones.forEach(({ area, popup, message }) => {
+        specialZones.forEach(({ area, popup, message, disableControls, modal, src }) => {
             WA.room.area.onEnter(area).subscribe(() => {
-                currentPopup = WA.ui.openPopup(popup, message, []);
+                if (disableControls) {
+                    WA.controls.disablePlayerControls();
+                }
+
+                if (modal) {
+                    currentPopup = WA.ui.modal.openModal({
+                        title: "Bild anzeigen",
+                        src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG',
+                        allow: "fullscreen",
+                        allowApi: true,
+                        position: "center",
+                    }, () => {
+                        console.info('The modal was closed');
+                    });
+                } else if (area === "clock") {
+                    const today = new Date();
+                    const time = today.getHours() + ":" + today.getMinutes();
+                    currentPopup = WA.ui.openPopup(popup, "The time is: " + time, []);
+                } else {
+                    currentPopup = WA.ui.openPopup(popup, message, [
+                        {
+                            label: "Alles klar!",
+                            callback: () => {
+                                if (disableControls) {
+                                    WA.controls.restorePlayerControls();
+                                }
+                                closePopup();
+                            }
+                        }
+                    ]);
+                }
             });
+
             WA.room.area.onLeave(area).subscribe(closePopup);
         });
 
