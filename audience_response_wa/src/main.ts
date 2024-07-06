@@ -77,6 +77,7 @@ let deactivatedAreas: { [key: string]: boolean } = {
     "teamBlauZone-Pop-Up": false,
 };
 
+// Manage popup visibility
 function deactivateArea(area: string) {
     deactivatedAreas[area] = true;
 }
@@ -116,13 +117,14 @@ function getPlayerPosition() {
 function updateFogOfWar() {
     const playerPos = getPlayerPosition();
     const fogLayer = findLayerByName("FogOfWar");
-    const width = fogLayer.width;
-    const height = fogLayer.height;
 
-    if (!Array.isArray(fogLayer.data)) {
-        console.error("fogLayer.data ist nicht korrekt initialisiert.");
+    if (!fogLayer || !Array.isArray(fogLayer.data)) {
+        console.error("Fog layer is not correctly initialized.");
         return;
     }
+
+    const width = fogLayer.width;
+    const height = fogLayer.height;
 
     // Set all tiles to opaque
     fogLayer.data.fill(1);
@@ -167,6 +169,11 @@ function updateCountdown() {
         clearInterval(countdownInterval as NodeJS.Timeout);
         countdownInterval = null;
     }
+    if (currentPopup) {
+        currentPopup.setContent(`Countdown: ${formatTime(countdownTime)}`);
+    } else {
+        showPopup();
+    }
 }
 
 function showPopup() {
@@ -183,7 +190,14 @@ function showPopup() {
 function startCountdown() {
     if (!isCountdownRunning) {
         isCountdownRunning = true;
-        countdownInterval = setInterval(updateCountdown, 1000); // Update every second
+        countdownInterval = setInterval(() => {
+            updateCountdown();
+            if (countdownTime <= 0) {
+                clearInterval(countdownInterval as NodeJS.Timeout);
+                countdownInterval = null;
+                currentPopup?.close(); // Close the popup when countdown ends
+            }
+        }, 1000); // Update every second
     }
 }
 
@@ -196,51 +210,33 @@ WA.onInit()
         loadHudFrame();
         startFogOfWar();
 
-        const currentMap = WA.room.name;
-        if (["labyrinth1", "labyrinth2", "labyrinth3"].includes(currentMap)) {
-            WA.player.getPosition().then((playerPosition) => {
-                const fogCanvas = document.createElement('canvas');
-                const fogContext = fogCanvas.getContext('2d');
-
-                fogCanvas.width = mapWidth;
-                fogCanvas.height = mapHeight;
-
-                fogContext!.fillStyle = 'rgba(0, 0, 0, 0.8)';
-                fogContext!.fillRect(0, 0, fogCanvas.width, fogCanvas.height);
-
-                fogContext!.globalCompositeOperation = 'destination-out';
-                fogContext!.beginPath();
-                fogContext!.arc(playerPosition.x, playerPosition.y, radius, 0, Math.PI * 2);
-                fogContext!.fill();
-
-                fogContext!.globalCompositeOperation = 'source-over';
-
-                document.body.appendChild(fogCanvas);
-            });
-        }
-
         // Handle team zones
         const teamZones = {
             "teamRotZone": "Rot",
             "teamBlauZone": "Blau",
-            "teamGrünZone": "Grün",
+            "teamGruenZone": "Grün",
             "teamGelbZone": "Gelb"
         };
 
         for (const [area, teamKey] of Object.entries(teamZones)) {
             WA.room.area.onEnter(area).subscribe(() => {
-                currentPopup = WA.ui.openPopup(
-                    `${teamKey}Zone-Pop-Up`,
-                    `Sie sind Team ${teamKey} beigetreten`,
-                    []
-                );
-                joinTeam(teamKey);
-                deactivateArea(`team${teamKey}Zone-Pop-Up`);
+                if (!isAreaDeactivated(`${teamKey}Zone-Pop-Up`)) {
+                    currentPopup = WA.ui.openPopup(
+                        `${teamKey}Zone-Pop-Up`,
+                        `Sie sind Team ${teamKey} beigetreten`,
+                        []
+                    );
+                    joinTeam(teamKey);
+                    deactivateArea(`${teamKey}Zone-Pop-Up`);
+                }
             });
-            WA.room.area.onLeave(area).subscribe(closePopup);
+            WA.room.area.onLeave(area).subscribe(() => {
+                closePopup();
+                activateArea(`${teamKey}Zone-Pop-Up`);
+            });
         }
 
-        // Handle other areas and special zones
+        // Handle special zones including countdown
         const specialZones = [
             { area: "JitsiMeeting1", popup: "JitsiMeetingPopup1", message: "Welcome to Jitsi!" },
             { area: "JitsiMeeting2", popup: "JitsiMeetingPopup2", message: "Welcome to Jitsi!" },
@@ -263,10 +259,11 @@ WA.onInit()
             { area: "l2", popup: "l2popup", message: "Hier geht es zu Labyrinth 2" },
             { area: "l3", popup: "l3popup", message: "Hier geht es zu Labyrinth 3" },
             { area: "backtopark", popup: "backtoparkpopup", message: "Hier geht es zurück zum Park" },
-            { area: "clock", popup: "clock-Pop-Up", message: '' }
+            { area: "clock", popup: "clock-Pop-Up", message: '' },
+            { area: "countdown", popup: "countdownpopup", message: '', countdown: true }
         ];
 
-        specialZones.forEach(({ area, popup, message, disableControls, modal, src }) => {
+        specialZones.forEach(({ area, popup, message, disableControls, modal, src, countdown }) => {
             WA.room.area.onEnter(area).subscribe(() => {
                 if (disableControls) {
                     WA.controls.disablePlayerControls();
@@ -275,13 +272,15 @@ WA.onInit()
                 if (modal) {
                     currentPopup = WA.ui.modal.openModal({
                         title: "Bild anzeigen",
-                        src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG',
+                        src: src,
                         allow: "fullscreen",
                         allowApi: true,
                         position: "center",
                     }, () => {
                         console.info('The modal was closed');
                     });
+                } else if (countdown) {
+                    startCountdown();
                 } else if (area === "clock") {
                     const today = new Date();
                     const time = today.getHours() + ":" + today.getMinutes();
@@ -301,7 +300,12 @@ WA.onInit()
                 }
             });
 
-            WA.room.area.onLeave(area).subscribe(closePopup);
+            WA.room.area.onLeave(area).subscribe(() => {
+                if (disableControls) {
+                    WA.controls.restorePlayerControls();
+                }
+                closePopup();
+            });
         });
 
         // Initialize additional API features
