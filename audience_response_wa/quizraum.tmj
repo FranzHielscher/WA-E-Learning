@@ -540,7 +540,7 @@
                 {
                  "height":96.8870156370883,
                  "id":35,
-                 "name":"Infotafel-Quizerl\u00e4uterung",
+                 "name":"Infotafel-Quizerlaeuterung",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -551,7 +551,7 @@
                 {
                  "height":94,
                  "id":36,
-                 "name":"Quizerl\u00e4uterung-Pop-Up",
+                 "name":"Quizerlaeuterung-Pop-Up",
                  "rotation":0,
                  "type":"area",
                  "visible":true,

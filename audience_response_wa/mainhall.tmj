@@ -774,7 +774,7 @@
                 {
                  "height":83.9993,
                  "id":47,
-                 "name":"teamGr\u00fcnZone",
+                 "name":"teamGruenZone",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -796,7 +796,7 @@
                 {
                  "height":59.6673,
                  "id":49,
-                 "name":"teamGr\u00fcnZone-Pop-Up",
+                 "name":"teamGruenZone-Pop-Up",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
