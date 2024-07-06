@@ -559,6 +559,28 @@
                  "width":52.9441,
                  "x":916.569290375159,
                  "y":351.53602756025
+                }, 
+                {
+                 "height":21.5,
+                 "id":55,
+                 "name":"teleporter2",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":23,
+                 "x":72,
+                 "y":394
+                }, 
+                {
+                 "height":29.5,
+                 "id":56,
+                 "name":"teleporter1",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":32.5,
+                 "x":31.5,
+                 "y":544.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -609,7 +631,7 @@
          "y":0
         }],
  "nextlayerid":79,
- "nextobjectid":55,
+ "nextobjectid":57,
  "orientation":"orthogonal",
  "properties":[
         {

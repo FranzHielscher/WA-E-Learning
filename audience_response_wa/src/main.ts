@@ -116,12 +116,12 @@ function isAreaDeactivated(area: string): boolean {
   return deactivatedAreas[area];
 }
 
-/*function closePopup() {
+function closePopup() {
   if (currentPopup !== undefined) {
     currentPopup.close();
     currentPopup = undefined;
   }
-}*/
+}
 
 // HUD Frame Loading
 function loadHudFrame() {
@@ -500,10 +500,106 @@ WA.onInit()
       }
     }
 
-    WA.room.area.onEnter("countdown").subscribe(() => {
-      startCountdown();
-      showPopup();
-    });
+        // Teleportation areas
+        const teleporters = {
+            "teleporter2": { x: 30.50, y: 605.50 }, // Destination for Teleporter 2
+            "teleporter1": { x: 30.50, y: 382.50 }  // Destination for Teleporter 1
+        };
+
+        // Iterate over the teleporters and set up area event handlers
+        for (const [area, position] of Object.entries(teleporters)) {
+            WA.room.area.onEnter(area).subscribe(() => {
+                // Check if the teleport function is available
+                if (typeof WA.player.teleport === 'function') {
+                    WA.player.teleport(position.x, position.y);
+                } else {
+                    console.error('WA.player.teleport function is not available.');
+                }
+            });
+        }
+
+        // Handle special zones including countdown
+        const specialZones = [
+            { area: "JitsiMeeting1", popup: "JitsiMeetingPopup1", message: "Welcome to Jitsi!" },
+            { area: "JitsiMeeting2", popup: "JitsiMeetingPopup2", message: "Welcome to Jitsi!" },
+            { area: "JitsiMeeting3", popup: "JitsiMeetingPopup3", message: "Welcome to Jitsi!" },
+            { area: "Infotafel", popup: "Infotafel-Pop-Up", message: "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!" },
+            { area: "Infotafel-Haupthalle", popup: "Haupthalle-Pop-Up", message: "Ihr begebt euch in Richtung der Haupthalle!" },
+            { area: "Infotafel-Mainhall", popup: "Mainhall-Pop-Up", message: "Willkommen in der Haupthalle, tritt einem Team bei!" },
+            { area: "Infotafel-Labyrinth", popup: "Labyrinth-Pop-Up", message: "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!" },
+            { area: "Infotafel-Conference", popup: "Conference-Pop-Up", message: "Ihr begebt euch in Richtung der Konferenzinsel!" },
+            { area: "Infotafel-Quizraum", popup: "Quizraum-Pop-Up", message: "Der Quizraum kann noch nicht betreten werden!" },
+            { area: "Zum Quizraum", popup: "Zum Quizraum", message: "" },
+            { area: "TeamHalle", popup: "TeamHalle", message: "" },
+            { area: "Infotafel-Feld", popup: "Feld-Pop-Up", message: "Die Erdäpfel sind leider noch nicht erntereif!", disableControls: true },
+            { area: "Infotafel-Friedhof", popup: "Friedhof-Pop-Up", message: "Der Friedhof der Verdammten" },
+            { area: "Infotafel-Quizerläuterung", popup: "Quizerläuterung-Pop-Up", message: "Begebt Euch an einen Quizpool!" },
+            { area: "Infotafel-Quizergebnis", popup: "Quizergebnis-Pop-Up", message: "Die Ergebnisse: ..." },
+            { area: "wegweiser", popup: "wegweiserpopup", message: "↑ Haupthalle\n→ Konferenzinsel\n↓ Quizraum\n← Labyrinth" },
+            { area: "l1s1", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1s2", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1s3", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1s4", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1s5", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1extra", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2s1", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2s2", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2s3", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2s4", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2s5", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l2extra", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3s1", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3s2", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3s3", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3s4", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3s5", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l3extra", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1", popup: "l1popup", message: "Hier geht es zu Labyrinth 1" },
+            { area: "l2", popup: "l2popup", message: "Hier geht es zu Labyrinth 2" },
+            { area: "l3", popup: "l3popup", message: "Hier geht es zu Labyrinth 3" },
+            { area: "backtopark", popup: "backtoparkpopup", message: "Hier geht es zurück zum Park" },
+            { area: "clock", popup: "clock-Pop-Up", message: '' },
+            { area: "countdown", popup: "countdownpopup", message: '', countdown: true }
+        ];
+
+        specialZones.forEach(({ area, popup, message, disableControls, infoboard, src, countdown }) => {
+            WA.room.area.onEnter(area).subscribe(() => {
+                if (disableControls) {
+                    WA.controls.disablePlayerControls();
+                }
+
+                if (infoboard) {
+                    // @ts-ignore
+                    // noinspection JSVoidFunctionReturnValueUsed
+                    currentPopup = WA.ui.modal.openModal({
+                        title: "Bild anzeigen",
+                        src: src,
+                        allow: "fullscreen",
+                        allowApi: true,
+                        position: "center",
+                    }, () => {
+                        console.info('The modal was closed');
+                    });
+                } else if (countdown) {
+                    startCountdown();
+                } else if (area === "clock") {
+                    const today = new Date();
+                    const time = today.getHours() + ":" + today.getMinutes();
+                    currentPopup = WA.ui.openPopup(popup, "The time is: " + time, []);
+                } else {
+                    currentPopup = WA.ui.openPopup(popup, message, [
+                        {
+                            label: "Alles klar!",
+                            callback: () => {
+                                if (disableControls) {
+                                    WA.controls.restorePlayerControls();
+                                }
+                                closePopup();
+                            }
+                        }
+                    ]);
+                }
+            });
 
     WA.room.area.onLeave("countdown").subscribe(() => {
       if (currentPopup) {
