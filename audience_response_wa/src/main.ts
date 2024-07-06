@@ -1,41 +1,40 @@
 import { Popup } from "@workadventure/iframe-api-typings";
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import { addHudFrame } from "hudframe.js";
 
 console.log("Script started successfully");
 
-let currentPopup: any = undefined;
+let currentPopup: Popup | undefined = undefined;
+const VISIBILITY_RADIUS = 5; // Visibility radius for fog of war
 
+// Team Management
 interface Team {
     name: string;
     members: string[];
 }
 
-// Initialisierung der Teams
 const teams: { [key: string]: Team } = {
-  Rot: { name: "Team Rot", members: [] },
-  Blau: { name: "Team Blau", members: [] },
-  Grün: { name: "Team Grün", members: [] },
-  Gelb: { name: "Team Gelb", members: [] },
+    Rot: { name: "Team Rot", members: [] },
+    Blau: { name: "Team Blau", members: [] },
+    Gruen: { name: "Team Grün", members: [] },
+    Gelb: { name: "Team Gelb", members: [] },
 };
 
 function joinTeam(teamKey: string) {
     const team = teams[teamKey];
     const playerName = WA.player.name;
-  let inTeam = false;
 
-    // Überprüfen, ob der Spieler bereits in einem Team ist
+    // Check if player is already in a team
     for (const key in teams) {
         if (teams[key].members.includes(playerName)) {
             WA.chat.sendChatMessage(
                 `${playerName}, you are already in ${teams[key].name}`,
                 playerName
             );
-            return; // Beende die Funktion, da der Spieler bereits in einem Team ist
+            return;
         }
     }
 
-    // Füge den Spieler dem Team hinzu, wenn er noch keinem Team angehört
+    // Add player to team if not full and not already in the team
     if (team.members.length < 4) {
         if (!team.members.includes(playerName)) {
             team.members.push(playerName);
@@ -55,12 +54,11 @@ function joinTeam(teamKey: string) {
     }
 }
 
-// Verbindung zu einem WebSocket-Server herstellen
+// WebSocket Connection
 const socket = new WebSocket("ws://localhost:8081");
 
 socket.onopen = () => {
     console.log("WebSocket connection established");
-    // Bei Verbindungsaufbau Team-Informationen anfordern
     socket.send(JSON.stringify({ type: "requestTeams" }));
 };
 
@@ -71,41 +69,25 @@ socket.onmessage = (event) => {
     }
 };
 
+// Area Management
 let deactivatedAreas: { [key: string]: boolean } = {
-    "teamGrünZone-Pop-Up": false,
-  "teamRotZone-Pop-Up": false,
+    "teamGruenZone-Pop-Up": false,
+    "teamRotZone-Pop-Up": false,
     "teamGelbZone-Pop-Up": false,
     "teamBlauZone-Pop-Up": false,
 };
 
-// Funktion zum Deaktivieren einer Area
 function deactivateArea(area: string) {
     deactivatedAreas[area] = true;
 }
 
-// Funktion zum Aktivieren einer Area
 function activateArea(area: string) {
     deactivatedAreas[area] = false;
 }
 
-// Funktion, die prüft, ob eine Area deaktiviert ist
 function isAreaDeactivated(area: string): boolean {
-    return deactivatedAreas[area] === true;
+    return deactivatedAreas[area];
 }
-
-function loadHudFrame() {
-  fetch("overlay.html")
-    .then((response) => response.text())
-    .then((data) => {
-      const div = document.createElement("div");
-      div.innerHTML = data;
-      document.body.appendChild(div.firstChild);
-    })
-    .catch((error) => console.error("Error loading HUD frame:", error));
-}
-
-// Rufe die Funktion auf, wenn das Skript geladen wird
-loadHudFrame();
 
 function closePopup() {
     if (currentPopup !== undefined) {
@@ -114,9 +96,19 @@ function closePopup() {
     }
 }
 
-// Fog of War Funktionen
-const VISIBILITY_RADIUS = 5; // Sichtweite des Spielers in Kacheln
+// HUD Frame Loading
+function loadHudFrame() {
+    fetch("overlay.html")
+        .then((response) => response.text())
+        .then((data) => {
+            const div = document.createElement("div");
+            div.innerHTML = data;
+            document.body.appendChild(div.firstChild as Node);
+        })
+        .catch((error) => console.error("Error loading HUD frame:", error));
+}
 
+// Fog of War
 function getPlayerPosition() {
     return { x: WA.player.position.x, y: WA.player.position.y };
 }
@@ -127,14 +119,13 @@ function updateFogOfWar() {
     const width = fogLayer.width;
     const height = fogLayer.height;
 
-    // Sicherstellen, dass fogLayer.data ein Array ist
     if (!Array.isArray(fogLayer.data)) {
         console.error("fogLayer.data ist nicht korrekt initialisiert.");
         return;
     }
 
-    // Alle Kacheln auf undurchsichtig setzen
-    fogLayer.data.fill(1);  // Annahme: 1 steht für sichtbare Kachel
+    // Set all tiles to opaque
+    fogLayer.data.fill(1);
 
     for (let y = -VISIBILITY_RADIUS; y <= VISIBILITY_RADIUS; y++) {
         for (let x = -VISIBILITY_RADIUS; x <= VISIBILITY_RADIUS; x++) {
@@ -143,7 +134,7 @@ function updateFogOfWar() {
 
             if (tileX >= 0 && tileX < width && tileY >= 0 && tileY < height) {
                 const index = tileY * width + tileX;
-                fogLayer.data[index] = 0; // Annahme: 0 steht für unsichtbare Kachel
+                fogLayer.data[index] = 0; // Set tile to invisible
             }
         }
     }
@@ -156,19 +147,57 @@ function findLayerByName(layerName: string) {
 }
 
 function startFogOfWar() {
-    setInterval(updateFogOfWar, 1000); // Alle 1000 ms (1 Sekunde) aktualisieren
+    setInterval(updateFogOfWar, 1000); // Update every second
 }
 
-// Waiting for the API to be ready
+// Countdown
+let countdownTime = 10 * 60; // 10 minutes in seconds
+let countdownInterval: NodeJS.Timeout | null = null;
+let isCountdownRunning = false;
+
+function formatTime(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+}
+
+function updateCountdown() {
+    countdownTime--;
+    if (countdownTime < 0) {
+        clearInterval(countdownInterval as NodeJS.Timeout);
+        countdownInterval = null;
+    }
+}
+
+function showPopup() {
+    if (currentPopup) {
+        currentPopup.close();
+    }
+    currentPopup = WA.ui.openPopup(
+        "countdownpopup",
+        `Countdown: ${formatTime(countdownTime)}`,
+        []
+    );
+}
+
+function startCountdown() {
+    if (!isCountdownRunning) {
+        isCountdownRunning = true;
+        countdownInterval = setInterval(updateCountdown, 1000); // Update every second
+    }
+}
+
+// Initialize API and Setup Area Events
 WA.onInit()
     .then(() => {
         console.log("Scripting API ready");
         console.log("Player tags: ", WA.player.tags);
 
+        loadHudFrame();
         startFogOfWar();
 
         const currentMap = WA.room.name;
-        if (currentMap === "labyrinth1" || currentMap === "labyrinth2" || currentMap === "labyrinth3") {
+        if (["labyrinth1", "labyrinth2", "labyrinth3"].includes(currentMap)) {
             WA.player.getPosition().then((playerPosition) => {
                 const fogCanvas = document.createElement('canvas');
                 const fogContext = fogCanvas.getContext('2d');
@@ -176,374 +205,80 @@ WA.onInit()
                 fogCanvas.width = mapWidth;
                 fogCanvas.height = mapHeight;
 
-                fogContext.fillStyle = 'rgba(0, 0, 0, 0.8)';
-                fogContext.fillRect(0, 0, fogCanvas.width, fogCanvas.height);
+                fogContext!.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                fogContext!.fillRect(0, 0, fogCanvas.width, fogCanvas.height);
 
-                fogContext.globalCompositeOperation = 'destination-out';
-                fogContext.beginPath();
-                fogContext.arc(playerPosition.x, playerPosition.y, radius, 0, Math.PI * 2);
-                fogContext.fill();
+                fogContext!.globalCompositeOperation = 'destination-out';
+                fogContext!.beginPath();
+                fogContext!.arc(playerPosition.x, playerPosition.y, radius, 0, Math.PI * 2);
+                fogContext!.fill();
 
-                fogContext.globalCompositeOperation = 'source-over';
+                fogContext!.globalCompositeOperation = 'source-over';
 
                 document.body.appendChild(fogCanvas);
             });
         }
 
-        //Einschreibung in die verschiedenen Teams
-        WA.room.area.onEnter("teamRotZone").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "teamRotZone-Pop-Up",
-                "Sie sind Team Rot beigetreten",
-                []
-            );
-            joinTeam("Rot");
-        deactivateArea("teamGrünZone-Pop-Up");
-    });
-    WA.room.area.onLeave("teamRotZone").subscribe(closePopup);
+        // Handle team zones
+        const teamZones = {
+            "teamRotZone": "Rot",
+            "teamBlauZone": "Blau",
+            "teamGrünZone": "Grün",
+            "teamGelbZone": "Gelb"
+        };
 
-        WA.room.area.onEnter("teamBlauZone").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "teamBlauZone-Pop-Up",
-                "Sie sind Team Blau beigetreten",
-                []
-            );
-            joinTeam("Blau");
-        });
-    WA.room.area.onLeave("teamBlauZone").subscribe(closePopup);
-
-        WA.room.area.onEnter("teamGrünZone").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "teamGrünZone-Pop-Up",
-                "Sie sind Team Grün beigetreten",
-                []
-            );
-            joinTeam("Grün");
-        });
-    WA.room.area.onLeave("teamGrünZone").subscribe(closePopup);
-
-    WA.room.area.onEnter("teamGelbZone").subscribe(() => {
-      currentPopup = WA.ui.openPopup(
-        "teamGelbZone-Pop-Up",
-        "Sie sind Team Gelb beigetreten",
-        []
-      );
-      joinTeam("Gelb");
-    });
-    WA.room.area.onLeave("teamGelbZone").subscribe(closePopup);
-
-        //Jitsi Meeting Räume für die conference.tmj
-        WA.room.area.onEnter("JitsiMeeting1").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "JitsiMeetingPopup1",
-                "Welcome to Jitsi!",
-                []
-            );
-        });
-        WA.room.area.onLeave("JitsiMeeting1").subscribe(closePopup);
-
-        WA.room.area.onEnter("JitsiMeeting2").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "JitsiMeetingPopup2",
-                "Welcome to Jitsi!",
-                []
-            );
-        });
-        WA.room.area.onLeave("JitsiMeeting2").subscribe(closePopup);
-
-        WA.room.area.onEnter("JitsiMeeting3").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "JitsiMeetingPopup3",
-                "Welcome to Jitsi!",
-                []
-            );
-        });
-        WA.room.area.onLeave("JitsiMeeting3").subscribe(closePopup);
-
-        //Infotafeln für die Wege
-        WA.room.area.onEnter("Infotafel").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Infotafel-Pop-Up",
-                "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!",
-                [
-                    {
-                        label: "Alles gelesen",
-                        callback: () => {
-                            WA.controls.restorePlayerControls();
-                            currentPopup.close();
-                        },
-                    },
-                ]
-            );
-        });
-
-        WA.room.area.onEnter("Infotafel-Haupthalle").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Haupthalle-Pop-Up",
-                "Ihr begebt euch in Richtung der Haupthalle!",
-                [
-                    {
-                        label: "Verstanden",
-                        callback: () => {
-                            WA.controls.restorePlayerControls();
-                            currentPopup.close();
-                        },
-                    },
-                ]
-            );
-        });
-
-        WA.room.area.onEnter("Infotafel-Mainhall").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Mainhall-Pop-Up",
-                "Willkommen in der Haupthalle, tritt einem Team bei!",
-                [
-            {
-        label: "Verstanden",
-            callback: () => {
-              WA.controls.restorePlayerControls();
-              currentPopup.close();
-            },
-          },
-        ]
-      );
-    });
-
-        WA.room.area.onEnter("Infotafel-Labyrinth").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Labyrinth-Pop-Up",
-                "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!",
-                [
-                    {
-                        label: "Verstanden",
-                        callback: () => {
-                            WA.controls.restorePlayerControls();
-                            currentPopup.close();
-                        },
-                    },
-                ]
-            );
-        });
-        WA.room.area.onEnter("Infotafel-Conference").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Conference-Pop-Up",
-                "Ihr begebt euch in Richtung der Konferenzinsel!",
-                [
-                    {
-                        label: "Verstanden",
-                        callback: () => {
-                            WA.controls.restorePlayerControls();
-                            currentPopup.close();
-                        },
-                    },
-                ]
-            );
-        });
-
-        WA.room.area.onEnter("Infotafel-Quizraum").subscribe(() => {
-            if (isAreaDeactivated("Infotafel-Quizraum")) {
-                console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
-            } else {
-                WA.controls.disablePlayerControls();
+        for (const [area, teamKey] of Object.entries(teamZones)) {
+            WA.room.area.onEnter(area).subscribe(() => {
                 currentPopup = WA.ui.openPopup(
-                    "Quizraum-Pop-Up",
-                    "Der Quizraum kann noch nicht betreten werden!",
-                    [
-                        {
-                            label: "Schade",
-                            callback: () => {
-                                WA.controls.restorePlayerControls();
-                                currentPopup.close();
-                            },
-                        },
-                    ]
+                    `${teamKey}Zone-Pop-Up`,
+                    `Sie sind Team ${teamKey} beigetreten`,
+                    []
                 );
-            }
-        });
-
-        WA.room.area.onEnter("Zum Quizraum").subscribe(() => {
-            if (isAreaDeactivated("Zum Quizraum")) {
-                console.log("Quizraum ist deaktiviert und kann nicht betreten werden.");
-            }
-        });
-
-        WA.room.area.onEnter("Infotafel-Feld").subscribe(() => {
-            WA.controls.disablePlayerControls();
-            currentPopup = WA.ui.openPopup(
-                "Feld-Pop-Up",
-                "Die Erdäpfel sind leider noch nicht erntereif!",
-                [
-                    {
-                        label: "Schade",
-                        callback: () => {
-                            WA.controls.restorePlayerControls();
-                            currentPopup.close();
-                        },
-                    },
-                ]
-            );
-        });
-        WA.room.area.onEnter("Infotafel-Friedhof").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "Friedhof-Pop-Up",
-                "Der Friedhof der Verdammten",
-                []
-            );
-        });
-        WA.room.area.onLeave("Infotafel-Friedhof").subscribe(closePopup);
-
-        WA.room.area.onEnter("Infotafel-Quizerläuterung").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "Quizerläuterung-Pop-Up",
-                "Begebt Euch an einen Quizpool!",
-                []
-            );
-        });
-        WA.room.area.onLeave("Infotafel-Quizerläuterung").subscribe(closePopup);
-
-        WA.room.area.onEnter("Infotafel-Quizergebnis").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "Quizergebnis-Pop-Up",
-                "Die Ergebnisse: ...",
-                []
-            );
-        });
-        WA.room.area.onLeave("Infotafel-Quizergebnis").subscribe(closePopup);
-
-        WA.room.area.onEnter("l1s1").subscribe(() => {
-            currentPopup = WA.ui.modal.openModal({
-                title: "Bild anzeigen",
-                src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG', // Ersetze durch die tatsächliche URL deines Bildes
-                allow: "fullscreen",
-                allowApi: true,
-                position: "center",
-            }, () => {
-                console.info('The modal was closed');
+                joinTeam(teamKey);
+                deactivateArea(`team${teamKey}Zone-Pop-Up`);
             });
-        });
-        WA.room.area.onLeave("l1s1").subscribe(closePopup);
-
-
-        WA.room.area.onEnter("wegweiser").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "wegweiserpopup",
-                "↑ Haupthalle\n→ Konferenzinsel\n↓ Quizraum\n← Labyrinth",
-                []
-            );
-        });
-        WA.room.area.onLeave("wegweiser").subscribe(closePopup);
-
-        WA.room.area.onEnter("l1").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "l1popup",
-                "Hier geht es zu Labyrinth 1",
-                []
-            );
-        });
-        WA.room.area.onLeave("l1").subscribe(closePopup);
-
-        WA.room.area.onEnter("l2").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "l2popup",
-                "Hier geht es zu Labyrinth 2",
-                []
-            );
-        });
-        WA.room.area.onLeave("l2").subscribe(closePopup);
-
-        WA.room.area.onEnter("l3").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "l3popup",
-                "Hier geht es zu Labyrinth 3",
-                []
-            );
-        });
-        WA.room.area.onLeave("l3").subscribe(closePopup);
-
-        WA.room.area.onEnter("backtopark").subscribe(() => {
-            currentPopup = WA.ui.openPopup(
-                "backtoparkpopup",
-                "Hier geht es zurück zum Park",
-                []
-            );
-        });
-        WA.room.area.onLeave("backtopark").subscribe(closePopup);
-
-        WA.room.area.onEnter("clock").subscribe(() => {
-            const today = new Date();
-            const time = today.getHours() + ":" + today.getMinutes();
-            currentPopup = WA.ui.openPopup(
-                "clock-Pop-Up",
-                "The time is: " + time,
-                []
-            );
-        });
-
-        WA.room.area.onLeave("clock").subscribe(closePopup);
-
-        //Countdown
-        let countdownTime = 10 * 60; // 10 minutes in seconds
-        let countdownInterval: string | number | NodeJS.Timeout | null | undefined;
-        let isCountdownRunning = false; // Variable to track if the countdown is already running
-        let currentPopup: Popup | null = null;
-
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+            WA.room.area.onLeave(area).subscribe(closePopup);
         }
 
-        function updateCountdown() {
-            countdownTime--;
+        // Handle other areas and special zones
+        const specialZones = [
+            { area: "JitsiMeeting1", popup: "JitsiMeetingPopup1", message: "Welcome to Jitsi!" },
+            { area: "JitsiMeeting2", popup: "JitsiMeetingPopup2", message: "Welcome to Jitsi!" },
+            { area: "JitsiMeeting3", popup: "JitsiMeetingPopup3", message: "Welcome to Jitsi!" },
+            { area: "Infotafel", popup: "Infotafel-Pop-Up", message: "Herzlich willkommen Reisender! Begebe dich in die Haupthalle für weitere Informationen!" },
+            { area: "Infotafel-Haupthalle", popup: "Haupthalle-Pop-Up", message: "Ihr begebt euch in Richtung der Haupthalle!" },
+            { area: "Infotafel-Mainhall", popup: "Mainhall-Pop-Up", message: "Willkommen in der Haupthalle, tritt einem Team bei!" },
+            { area: "Infotafel-Labyrinth", popup: "Labyrinth-Pop-Up", message: "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!" },
+            { area: "Infotafel-Conference", popup: "Conference-Pop-Up", message: "Ihr begebt euch in Richtung der Konferenzinsel!" },
+            { area: "Infotafel-Quizraum", popup: "Quizraum-Pop-Up", message: "Der Quizraum kann noch nicht betreten werden!" },
+            { area: "Zum Quizraum", popup: "Zum Quizraum", message: "" },
+            { area: "TeamHalle", popup: "TeamHalle", message: "" },
+            { area: "Infotafel-Feld", popup: "Feld-Pop-Up", message: "Die Erdäpfel sind leider noch nicht erntereif!", disableControls: true },
+            { area: "Infotafel-Friedhof", popup: "Friedhof-Pop-Up", message: "Der Friedhof der Verdammten" },
+            { area: "Infotafel-Quizerläuterung", popup: "Quizerläuterung-Pop-Up", message: "Begebt Euch an einen Quizpool!" },
+            { area: "Infotafel-Quizergebnis", popup: "Quizergebnis-Pop-Up", message: "Die Ergebnisse: ..." },
+            { area: "wegweiser", popup: "wegweiserpopup", message: "↑ Haupthalle\n→ Konferenzinsel\n↓ Quizraum\n← Labyrinth" },
+            { area: "l1s1", popup: "Bild-Anzeigen", message: '', modal: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1", popup: "l1popup", message: "Hier geht es zu Labyrinth 1" },
+            { area: "l2", popup: "l2popup", message: "Hier geht es zu Labyrinth 2" },
+            { area: "l3", popup: "l3popup", message: "Hier geht es zu Labyrinth 3" },
+            { area: "backtopark", popup: "backtoparkpopup", message: "Hier geht es zurück zum Park" },
+            { area: "clock", popup: "clock-Pop-Up", message: '' }
+        ];
 
-            if (countdownTime < 0) {
-                clearInterval(countdownInterval);
-                countdownInterval = null;
-                return;
-            }
-        }
-
-        function showPopup() {
-            currentPopup = WA.ui.openPopup(
-                "countdownpopup",
-                `Countdown: ${formatTime(countdownTime)}`,
-                []
-            );
-        }
-
-        function startCountdown() {
-            if (!isCountdownRunning) {
-                isCountdownRunning = true;
-                countdownInterval = setInterval(updateCountdown, 1000); // Update countdown every second
-            }
-        }
-
-        WA.room.area.onEnter("countdown").subscribe(() => {
-            startCountdown();
-            showPopup();
+        specialZones.forEach(({ area, popup, message }) => {
+            WA.room.area.onEnter(area).subscribe(() => {
+                currentPopup = WA.ui.openPopup(popup, message, []);
+            });
+            WA.room.area.onLeave(area).subscribe(closePopup);
         });
 
-        WA.room.area.onLeave("countdown").subscribe(() => {
-            if (currentPopup) {
-                currentPopup.close();
-                currentPopup = null;
-            }
-        });
-        //Countdown ende
-
-
-        // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
+        // Initialize additional API features
         bootstrapExtra()
             .then(() => {
                 console.log("Scripting API Extra ready");
             })
             .catch((e) => console.error(e));
+
     })
     .catch((e) => console.error(e));
-
-export {};
