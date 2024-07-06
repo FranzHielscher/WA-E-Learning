@@ -68,6 +68,11 @@ socket.onmessage = (event) => {
     }
 };
 
+socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+    WA.chat.sendChatMessage("WebSocket connection error. Please try again later.", WA.player.name);
+};
+
 // Area Management
 let deactivatedAreas: { [key: string]: boolean } = {
     "teamGruenZone-Pop-Up": false,
