@@ -5,7 +5,7 @@ const server = new WebSocket.Server({ port: 8081 });
 let teams = {
   Rot: [],
   Blau: [],
-  Grün: [],
+  Gruen: [],
   Gelb: [],
 };
 
@@ -20,7 +20,7 @@ server.on("connection", (socket) => {
     JSON.stringify({ type: "teamUpdate", teamKey: "Blau", members: teams.Blau })
   );
   socket.send(
-    JSON.stringify({ type: "teamUpdate", teamKey: "Grün", members: teams.Grün })
+    JSON.stringify({ type: "teamUpdate", teamKey: "Gruen", members: teams.Gruen })
   );
   socket.send(
     JSON.stringify({ type: "teamUpdate", teamKey: "Gelb", members: teams.Gelb })
@@ -64,8 +64,8 @@ server.on("connection", (socket) => {
       socket.send(
         JSON.stringify({
           type: "teamUpdate",
-          teamKey: "Grün",
-          members: teams.Grün,
+          teamKey: "Gruen",
+          members: teams.Gruen,
         })
       );
       socket.send(
