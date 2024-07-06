@@ -539,17 +539,6 @@
                  "y":609.948883725629
                 }, 
                 {
-                 "height":64.7266539686357,
-                 "id":51,
-                 "name":"countdown",
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":27.6428932215375,
-                 "x":930.69504556575,
-                 "y":349.783980137101
-                }, 
-                {
                  "height":14.012,
                  "id":54,
                  "name":"countdownpopup",
@@ -559,6 +548,17 @@
                  "width":85.3494,
                  "x":452.331674066655,
                  "y":356.119113822619
+                }, 
+                {
+                 "height":65.332,
+                 "id":55,
+                 "name":"countdown",
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":52.9441,
+                 "x":915.967092839799,
+                 "y":348.525039883446
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -609,7 +609,7 @@
          "y":0
         }],
  "nextlayerid":79,
- "nextobjectid":55,
+ "nextobjectid":56,
  "orientation":"orthogonal",
  "properties":[
         {

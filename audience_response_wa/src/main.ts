@@ -4,7 +4,6 @@ import { bootstrapExtra } from "@workadventure/scripting-api-extra";
 console.log("Script started successfully");
 
 let currentPopup: Popup | undefined = undefined;
-const VISIBILITY_RADIUS = 5; // Visibility radius for fog of war
 
 // Team Management
 interface Team {
@@ -109,49 +108,6 @@ function loadHudFrame() {
         .catch((error) => console.error("Error loading HUD frame:", error));
 }
 
-// Fog of War
-function getPlayerPosition() {
-    return { x: WA.player.position.x, y: WA.player.position.y };
-}
-
-function updateFogOfWar() {
-    const playerPos = getPlayerPosition();
-    const fogLayer = findLayerByName("FogOfWar");
-
-    if (!fogLayer || !Array.isArray(fogLayer.data)) {
-        console.error("Fog layer is not correctly initialized.");
-        return;
-    }
-
-    const width = fogLayer.width;
-    const height = fogLayer.height;
-
-    // Set all tiles to opaque
-    fogLayer.data.fill(1);
-
-    for (let y = -VISIBILITY_RADIUS; y <= VISIBILITY_RADIUS; y++) {
-        for (let x = -VISIBILITY_RADIUS; x <= VISIBILITY_RADIUS; x++) {
-            const tileX = Math.floor(playerPos.x + x);
-            const tileY = Math.floor(playerPos.y + y);
-
-            if (tileX >= 0 && tileX < width && tileY >= 0 && tileY < height) {
-                const index = tileY * width + tileX;
-                fogLayer.data[index] = 0; // Set tile to invisible
-            }
-        }
-    }
-
-    WA.room.render();
-}
-
-function findLayerByName(layerName: string) {
-    return WA.room.layers.find(layer => layer.name === layerName);
-}
-
-function startFogOfWar() {
-    setInterval(updateFogOfWar, 1000); // Update every second
-}
-
 // Countdown
 let countdownTime = 10 * 60; // 10 minutes in seconds
 let countdownInterval: NodeJS.Timeout | null = null;
@@ -169,8 +125,17 @@ function updateCountdown() {
         clearInterval(countdownInterval as NodeJS.Timeout);
         countdownInterval = null;
     }
+
     if (currentPopup) {
-        currentPopup.setContent(`Countdown: ${formatTime(countdownTime)}`);
+        currentPopup.close();  // Close the existing popup
+        currentPopup = undefined;  // Clear the reference
+
+        // Reopen the popup with updated content
+        currentPopup = WA.ui.openPopup(
+            "countdownPopup",  // Ensure you have a unique identifier
+            `Countdown ${formatTime(countdownTime)}`,
+            []
+        );
     } else {
         showPopup();
     }
@@ -182,7 +147,7 @@ function showPopup() {
     }
     currentPopup = WA.ui.openPopup(
         "countdownpopup",
-        `Countdown: ${formatTime(countdownTime)}`,
+        `Countdown ${formatTime(countdownTime)}`,
         []
     );
 }
@@ -208,7 +173,6 @@ WA.onInit()
         console.log("Player tags: ", WA.player.tags);
 
         loadHudFrame();
-        startFogOfWar();
 
         // Handle team zones
         const teamZones = {
@@ -254,7 +218,7 @@ WA.onInit()
             { area: "Infotafel-Quizerläuterung", popup: "Quizerläuterung-Pop-Up", message: "Begebt Euch an einen Quizpool!" },
             { area: "Infotafel-Quizergebnis", popup: "Quizergebnis-Pop-Up", message: "Die Ergebnisse: ..." },
             { area: "wegweiser", popup: "wegweiserpopup", message: "↑ Haupthalle\n→ Konferenzinsel\n↓ Quizraum\n← Labyrinth" },
-            { area: "l1s1", popup: "Bild-Anzeigen", message: '', modal: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
+            { area: "l1s1", popup: "Bild-Anzeigen", message: '', infoboard: true, src: 'https://mxritzzxllnxr.github.io/images/l1s1.PNG' },
             { area: "l1", popup: "l1popup", message: "Hier geht es zu Labyrinth 1" },
             { area: "l2", popup: "l2popup", message: "Hier geht es zu Labyrinth 2" },
             { area: "l3", popup: "l3popup", message: "Hier geht es zu Labyrinth 3" },
@@ -263,13 +227,15 @@ WA.onInit()
             { area: "countdown", popup: "countdownpopup", message: '', countdown: true }
         ];
 
-        specialZones.forEach(({ area, popup, message, disableControls, modal, src, countdown }) => {
+        specialZones.forEach(({ area, popup, message, disableControls, infoboard, src, countdown }) => {
             WA.room.area.onEnter(area).subscribe(() => {
                 if (disableControls) {
                     WA.controls.disablePlayerControls();
                 }
 
-                if (modal) {
+                if (infoboard) {
+                    // @ts-ignore
+                    // noinspection JSVoidFunctionReturnValueUsed
                     currentPopup = WA.ui.modal.openModal({
                         title: "Bild anzeigen",
                         src: src,
