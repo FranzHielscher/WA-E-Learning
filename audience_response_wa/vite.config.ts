@@ -5,6 +5,7 @@ import { getMaps, getMapsOptimizers, getMapsScripts, LogLevel, OptimizeOptions }
 const maps = getMaps();
 
 let optimizerOptions: OptimizeOptions = {
+    // @ts-ignore
     logs: process.env.LOG_LEVEL && process.env.LOG_LEVEL in LogLevel ? LogLevel[process.env.LOG_LEVEL] : LogLevel.NORMAL,
 };
 
