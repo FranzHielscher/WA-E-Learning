@@ -1,3 +1,10 @@
+import { Popup } from "@workadventure/iframe-api-typings";
+import { bootstrapExtra } from "@workadventure/scripting-api-extra";
+
+console.log("Script started successfully");
+
+let currentPopup: Popup | undefined = undefined;
+
 // Team Management
 interface Team {
     name: string;
