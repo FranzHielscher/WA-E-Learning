@@ -19,7 +19,9 @@ const teams: { [key: string]: Team } = {
 };
 
 function initialisierung() {
-  WA.room.hideLayer("collisionsLab3");
+  WA.room.showLayer("collisionsLab3");
+  WA.room.showLayer("collisionsLab2");
+  WA.room.showLayer("collisionsLab1");
 }
 
 function joinTeam(teamKey: string) {
@@ -362,12 +364,6 @@ WA.onInit()
         area: "Infotafel-Mainhall",
         popup: "Mainhall-Pop-Up",
         message: "Willkommen in der Haupthalle, tritt einem Team bei!",
-      },
-      {
-        area: "Infotafel-Labyrinth",
-        popup: "Labyrinth-Pop-Up",
-        message:
-          "Betretet das Labyrinth erst nachdem Ihr in der Haupthalle wart!",
       },
       {
         area: "Infotafel-Conference",
