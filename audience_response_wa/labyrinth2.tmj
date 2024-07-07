@@ -375,7 +375,7 @@
                         {
                          "name":"exitUrl",
                          "type":"string",
-                         "value":"park.tmj#from-labyrinth2"
+                         "value":"park.tmj#LabyrinthEntry"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -660,7 +660,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.11.0",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

@@ -667,7 +667,7 @@
                         {
                          "name":"exitUrl",
                          "type":"string",
-                         "value":"park.tmj#from-conference"
+                         "value":"park.tmj#ConferenceEntry"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -684,7 +684,7 @@
                         {
                          "name":"exitUrl",
                          "type":"string",
-                         "value":"park.tmj#from-conference"
+                         "value":"park.tmj#ConferenceEntry"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -714,6 +714,23 @@
                  "width":131,
                  "x":605,
                  "y":262
+                }, 
+                {
+                 "height":37,
+                 "id":48,
+                 "name":"to-park",
+                 "properties":[
+                        {
+                         "name":"exitUrl",
+                         "type":"string",
+                         "value":"park.tmj#ConferenceEntry"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":29.3835083946737,
+                 "x":1.84947481597882,
+                 "y":413.226077247539
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -770,7 +787,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":48,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "properties":[
         {
