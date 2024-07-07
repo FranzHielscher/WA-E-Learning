@@ -18,6 +18,10 @@ const teams: { [key: string]: Team } = {
   Gelb: { name: "Team Gelb", members: [] },
 };
 
+function initialisierung() {
+  WA.room.hideLayer("collisionsLab3");
+}
+
 function joinTeam(teamKey: string) {
   const team = teams[teamKey];
   const playerName = WA.player.name;
@@ -200,11 +204,79 @@ function displayTeamsInChat() {
   WA.chat.sendChatMessage(message);
 }
 
+function openLabyrinthSignup(teamKey: string) {
+  const team = teams[teamKey];
+  const playerName = WA.player.name;
+
+  WA.room.area.onEnter("Labyrinth-Einschreibung").subscribe(() => {
+    currentPopup = WA.ui.openPopup(
+      "Labyrinth-Pop-Up",
+      `Melde dich für ein Labyrinth als Mitglied von ${team.name} an`,
+      [
+        {
+          label: "Für Labyrinth 1 anmelden",
+          callback: () => {
+            signUpForLabyrinth(playerName, 1);
+            closePopup();
+          },
+        },
+        {
+          label: "Für Labyrinth 2 anmelden",
+          callback: () => {
+            signUpForLabyrinth(playerName, 2);
+            closePopup();
+          },
+        },
+        {
+          label: "Für Labyrinth 3 anmelden",
+          callback: () => {
+            signUpForLabyrinth(playerName, 3);
+            closePopup();
+          },
+        },
+        {
+          label: "Abbrechen",
+          callback: closePopup,
+        },
+      ]
+    );
+  });
+}
+
+function signUpForLabyrinth(playerName: string, labyrinthNumber: number) {
+  // Implement the logic to handle the sign-up process here
+  WA.chat.sendChatMessage(
+    `${playerName} hat sich für Labyrinth ${labyrinthNumber} angemeldet`,
+    playerName
+  );
+
+  let labyrinthArea: string;
+  switch (labyrinthNumber) {
+    case 1:
+      labyrinthArea = "Zum Labyrinth 1";
+      break;
+    case 2:
+      labyrinthArea = "Zum Labyrinth 2";
+      break;
+    case 3:
+      labyrinthArea = "Zum Labyrinth 3";
+      break;
+    default:
+      WA.chat.sendChatMessage("Ungültige Labyrinth-Nummer.", playerName);
+      return;
+  }
+
+  // Assuming the area names where transitions are defined are "labyrinth1Entrance", "labyrinth2Entrance", and "labyrinth3Entrance"
+  WA.room.showLayer(labyrinthArea);
+}
+
 // Initialize API and Setup Area Events
 WA.onInit()
   .then(() => {
     console.log("Scripting API ready");
     console.log("Player tags: ", WA.player.tags);
+
+    initialisierung();
 
     WA.room.area.onEnter("teamInfo").subscribe(() => {
       displayTeamsInChat();
@@ -230,6 +302,7 @@ WA.onInit()
           );
           joinTeam(teamKey);
           displayTeamsInChat();
+          openLabyrinthSignup(teamKey);
           deactivateArea(`${teamKey}Zone-Pop-Up`);
         }
       });
