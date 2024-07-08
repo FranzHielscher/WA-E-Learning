@@ -5,6 +5,8 @@ console.log("Script started successfully");
 
 let currentPopup: Popup | undefined = undefined;
 
+let labCon: Boolean = false;
+
 // Team Management
 interface Team {
   name: string;
@@ -22,6 +24,9 @@ function initialisierung() {
   WA.room.showLayer("collisionsLab3");
   WA.room.showLayer("collisionsLab2");
   WA.room.showLayer("collisionsLab1");
+  WA.room.hideLayer("barriersAfterEnterLab1");
+  WA.room.hideLayer("barriersAfterEnterLab2");
+  WA.room.hideLayer("barriersAfterEnterLab3");
 }
 
 function joinTeam(teamKey: string) {
@@ -205,73 +210,6 @@ function displayTeamsInChat() {
   // Sende die Nachricht in den Chat
   WA.chat.sendChatMessage(message);
 }
-
-function openLabyrinthSignup(teamKey: string) {
-  const team = teams[teamKey];
-  const playerName = WA.player.name;
-
-  WA.room.area.onEnter("Labyrinth-Einschreibung").subscribe(() => {
-    currentPopup = WA.ui.openPopup(
-      "Labyrinth-Pop-Up",
-      `Melde dich für ein Labyrinth als Mitglied von ${team.name} an`,
-      [
-        {
-          label: "Für Labyrinth 1 anmelden",
-          callback: () => {
-            signUpForLabyrinth(playerName, 1);
-            closePopup();
-          },
-        },
-        {
-          label: "Für Labyrinth 2 anmelden",
-          callback: () => {
-            signUpForLabyrinth(playerName, 2);
-            closePopup();
-          },
-        },
-        {
-          label: "Für Labyrinth 3 anmelden",
-          callback: () => {
-            signUpForLabyrinth(playerName, 3);
-            closePopup();
-          },
-        },
-        {
-          label: "Abbrechen",
-          callback: closePopup,
-        },
-      ]
-    );
-  });
-}
-
-function signUpForLabyrinth(playerName: string, labyrinthNumber: number) {
-  // Implement the logic to handle the sign-up process here
-  WA.chat.sendChatMessage(
-    `${playerName} hat sich für Labyrinth ${labyrinthNumber} angemeldet`,
-    playerName
-  );
-
-  let labyrinthArea: string;
-  switch (labyrinthNumber) {
-    case 1:
-      labyrinthArea = "Zum Labyrinth 1";
-      break;
-    case 2:
-      labyrinthArea = "Zum Labyrinth 2";
-      break;
-    case 3:
-      labyrinthArea = "Zum Labyrinth 3";
-      break;
-    default:
-      WA.chat.sendChatMessage("Ungültige Labyrinth-Nummer.", playerName);
-      return;
-  }
-
-  // Assuming the area names where transitions are defined are "labyrinth1Entrance", "labyrinth2Entrance", and "labyrinth3Entrance"
-  WA.room.showLayer(labyrinthArea);
-}
-
 // Initialize API and Setup Area Events
 WA.onInit()
   .then(() => {
@@ -279,9 +217,48 @@ WA.onInit()
     console.log("Player tags: ", WA.player.tags);
 
     initialisierung();
+    WA.room.area.onEnter("entryLab1").subscribe(() => {
+      WA.room.hideLayer("collisionsLab1");
+      WA.chat.sendChatMessage("Labyrinth 1 freigeschalten");
+      WA.room.showLayer("collisionsLab2");
+      WA.room.showLayer("collisionsLab3");
+      labCon = true;
+      if (labCon == true) {
+        WA.room.showLayer("barriersAfterEnterLab1");
+      }
+    });
+    WA.room.area.onEnter("entryLab2").subscribe(() => {
+      WA.room.hideLayer("collisionsLab2");
+      WA.chat.sendChatMessage("Labyrinth 2 freigeschalten");
+      WA.room.showLayer("collisionsLab1");
+      WA.room.showLayer("collisionsLab3");
+      labCon = true;
+      if (labCon == true) {
+        WA.room.showLayer("barriersAfterEnterLab2");
+      }
+    });
+    WA.room.area.onEnter("entryLab3").subscribe(() => {
+      WA.room.hideLayer("collisionsLab3");
+      WA.chat.sendChatMessage("Labyrinth 3 freigeschalten");
+      WA.room.showLayer("collisionsLab1");
+      WA.room.showLayer("collisionsLab2");
+      labCon = true;
+      if (labCon == true) {
+        WA.room.showLayer("barriersAfterEnterLab3");
+      }
+    });
 
     WA.room.area.onEnter("teamInfo").subscribe(() => {
       displayTeamsInChat();
+    });
+
+    WA.room.area.onEnter("Labyrinth-Infotafel").subscribe(() => {
+      displayTeamsInChat();
+      currentPopup = WA.ui.openPopup(
+        "Labyrinth-Pop-Up",
+        "ERST WENN DIE TEAMS GEBILDET WURDEN! \n Das jeweilige Team muss sich nun aufteilen! (wenn es 4 Spieler je Team sind, sollte ein Labyrinth doppelt betreten werden)",
+        []
+      );
     });
 
     loadHudFrame();
@@ -304,7 +281,6 @@ WA.onInit()
           );
           joinTeam(teamKey);
           displayTeamsInChat();
-          openLabyrinthSignup(teamKey);
           deactivateArea(`${teamKey}Zone-Pop-Up`);
         }
       });
