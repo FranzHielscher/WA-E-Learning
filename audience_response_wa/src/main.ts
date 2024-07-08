@@ -256,9 +256,13 @@ WA.onInit()
       displayTeamsInChat();
       currentPopup = WA.ui.openPopup(
         "Labyrinth-Pop-Up",
-        "ERST WENN DIE TEAMS GEBILDET WURDEN! \n Das jeweilige Team muss sich nun aufteilen! (wenn es 4 Spieler je Team sind, sollte ein Labyrinth doppelt betreten werden)",
+        "Erst Teams in der Haupthalle bilden! \n Dann auf die Labyrinthe aufteilen! \n Bei mehr als drei Spielern: Doppelt belegen.",
         []
       );
+    });
+
+    WA.room.area.onLeave("Labyrinth-Infotafel").subscribe(() => {
+      closePopup();
     });
 
     loadHudFrame();

@@ -1501,15 +1501,15 @@
                  "y":518.731596884838
                 }, 
                 {
-                 "height":144.379511859745,
+                 "height":62.879511859745,
                  "id":92,
                  "name":"teamInfo",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":146.098315572362,
-                 "x":583.710257368901,
-                 "y":574.81036702105
+                 "width":59.098315572362,
+                 "x":737.210257368901,
+                 "y":543.81036702105
                 }, 
                 {
                  "height":44.4898256874043,
@@ -1730,7 +1730,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
