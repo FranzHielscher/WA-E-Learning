@@ -586,6 +586,37 @@ WA.onInit()
       }
     );
 
+// Beispiel für eine Funktion, die bei einem Button-Klick ausgeführt wird
+function buttonClicked(buttonNumber: number) {
+  WA.chat.sendChatMessage(`Button ${buttonNumber} geklickt!`, WA.player.name);
+}
+
+// Bereich für das Popup mit 16 Buttons
+WA.room.area.onEnter("punkteabgeben").subscribe(() => {
+  closePopup(); // Schließe vorhandenes Popup, wenn es existiert
+
+  const buttons1 = [];
+  for (let i = 1; i <= 6; i++) {
+    buttons1.push({label: `Button ${i}`,callback: () => {buttonClicked(i);closePopup();},});
+  }
+  currentPopup = WA.ui.openPopup("punkteabgebenpopup1", "gib deine punkte an", buttons1);
+  const buttons2 = [];
+  for (let i = 7; i <= 12; i++) {
+    buttons2.push({label: `Button ${i}`,callback: () => {buttonClicked(i);closePopup();},});
+  }
+  currentPopup = WA.ui.openPopup("punkteabgebenpopup2", "", buttons2);
+  const buttons3 = [];
+  for (let i = 13; i <= 18; i++) {
+    buttons3.push({label: `Button ${i}`,callback: () => {buttonClicked(i);closePopup();},});
+  }
+  currentPopup = WA.ui.openPopup("punkteabgebenpopup3", "", buttons3);
+});
+
+// Bereich für das Popup verlassen
+WA.room.area.onLeave("punkteabgeben").subscribe(() => {
+  closePopup();
+});
+
     // Initialize additional API features
     bootstrapExtra()
       .then(() => {
