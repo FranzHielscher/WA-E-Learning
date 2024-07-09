@@ -1303,15 +1303,15 @@
                  "y":544.310816666666
                 }, 
                 {
-                 "height":65.3783666666666,
+                 "height":74.3783666666666,
                  "id":82,
                  "name":"Infotafel-Quizraum",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":75.1743,
-                 "x":711.41285,
-                 "y":1133.97748333333
+                 "width":104.1743,
+                 "x":682.41285,
+                 "y":1124.97748333333
                 }, 
                 {
                  "height":94,
@@ -1730,7 +1730,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.11.0",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {
