@@ -551,7 +551,7 @@
                 {
                  "height":64.3280971750087,
                  "id":37,
-                 "name":"Infotafel-Quizergebnis",
+                 "name":"scorePopup",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -562,7 +562,7 @@
                 {
                  "height":94,
                  "id":38,
-                 "name":"Quizergebnis-Pop-Up",
+                 "name":"ergebnis",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
@@ -578,7 +578,7 @@
                         {
                          "name":"openWebsite",
                          "type":"string",
-                         "value":"https:\/\/www.menti.com\/alq2yp43d73c"
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
                         }],
                  "rotation":0,
                  "type":"area",
@@ -691,6 +691,17 @@
                  "width":349,
                  "x":579,
                  "y":553
+                }, 
+                {
+                 "height":0,
+                 "id":56,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":467.827287368663,
+                 "y":94.3323874530255
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -742,7 +753,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":55,
+ "nextobjectid":57,
  "orientation":"orthogonal",
  "properties":[
         {
