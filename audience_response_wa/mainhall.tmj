@@ -764,28 +764,6 @@
                  "width":123.717,
                  "x":1060.1415,
                  "y":162.16635
-                }, 
-                {
-                 "height":73.3333333333334,
-                 "id":52,
-                 "name":"ergebnis",
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":121.333333333333,
-                 "x":672,
-                 "y":414.666666666667
-                }, 
-                {
-                 "height":64.3281,
-                 "id":53,
-                 "name":"scorePopup",
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":186.505,
-                 "x":640.080833333333,
-                 "y":335.83595
                 }],
          "opacity":1,
          "type":"objectgroup",
