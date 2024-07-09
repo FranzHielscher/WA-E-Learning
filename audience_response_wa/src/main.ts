@@ -579,6 +579,11 @@ WA.onInit()
         message: "",
         countdown: true,
       },
+      {
+        area: "Infotafel-Quizerlaeuterung",
+        popup: "Quizerlaeuterung-Pop-Up",
+        message: "Begebe dich auf einen Sitzplatz gebe den Code ein und beginne das mit dem Quiz \n Wenn das Quiz fertig ist gebe bitte deinen Punktestand in den Chat über deine Timeline wiefolgt ein: punkte 10",
+      },
     ];
 
     specialZones.forEach(
