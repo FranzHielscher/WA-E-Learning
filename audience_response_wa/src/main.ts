@@ -97,10 +97,6 @@ function pointsSend(points: number) {
         JSON.stringify({ type: "updateTeamScores", teamKey: key, points })
 
       );
-      WA.chat.sendChatMessage(
-        `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
-        playerName
-      );
       break;
     }
   }
@@ -582,7 +578,7 @@ WA.onInit()
       {
         area: "Infotafel-Quizerlaeuterung",
         popup: "Quizerlaeuterung-Pop-Up",
-        message: "Begebe dich erneut unten links in Dein Team! \n Begebe dich auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: punkte X",
+        message: "Begib dich erneut unten links in Dein Team! \n \n Begib dich dann auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: \n \n Meine Punkte: X",
       },
     ];
 
@@ -648,7 +644,7 @@ WA.onInit()
 
     WA.chat.onChatMessage((message) => {
       // Überprüfen, ob die Nachricht dem Muster "punkte <nummer>" entspricht
-      const match = message.match(/^punkte\s+(\d+)$/i);
+      const match = message.match(/^Meine Punkte:\s+(\d+)$/i);
       if (match) {
         const points = parseInt(match[1], 10);
         if (points >= 1 && points <= 16) {
