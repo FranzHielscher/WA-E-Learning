@@ -22,6 +22,7 @@ jobs:
 
       - name: "Install dependencies"
         run: npm install
+        run: npm install -g typescript
 
       - name: "Build scripts"
         run: npm run build
