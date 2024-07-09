@@ -825,21 +825,6 @@
  "orientation":"orthogonal",
  "properties":[
         {
-         "name":"mapCopyright",
-         "type":"string",
-         "value":"Credits: WorkAdventure (https:\/\/WorkAdventu.re) \nLicense: CC-BY-SA 3.0 (http:\/\/creativecommons.org\/licenses\/by-sa\/3.0\/)"
-        }, 
-        {
-         "name":"mapDescription",
-         "type":"string",
-         "value":"A perfect virtual office to get started with WorkAdventure!"
-        }, 
-        {
-         "name":"mapImage",
-         "type":"string",
-         "value":"map.png"
-        }, 
-        {
          "name":"mapName",
          "type":"string",
          "value":"Office"
@@ -850,7 +835,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
