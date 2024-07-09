@@ -582,7 +582,7 @@ WA.onInit()
       {
         area: "Infotafel-Quizerlaeuterung",
         popup: "Quizerlaeuterung-Pop-Up",
-        message: "Begebe dich auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: punkte X",
+        message: "Begebe dich erneut unten links in Dein Team! \n Begebe dich auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: punkte X",
       },
     ];
 
