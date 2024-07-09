@@ -84,13 +84,18 @@ function updateTeamScores(scores: { [key: string]: number }) {
 }
 
 // Beispiel für eine Funktion, die bei einem Button-Klick ausgeführt wird
-function buttonClicked(points: number) {
+function pointsSend(points: number) {
   const playerName = WA.player.name;
   for (const key in teams) {
     if (teams[key].members.includes(playerName)) {
+      WA.chat.sendChatMessage(
+          `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
+          playerName
+      );
       teams[key].teamScore += points;
       socket.send(
         JSON.stringify({ type: "updateTeamScores", teamKey: key, points })
+
       );
       WA.chat.sendChatMessage(
         `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
@@ -642,13 +647,14 @@ WA.onInit()
       if (match) {
         const points = parseInt(match[1], 10);
         if (points >= 1 && points <= 16) {
-          buttonClicked(points);
+          pointsSend(points);
           WA.chat.sendChatMessage(`Du hast ${points} Punkte eingegeben.`);
         } else {
           WA.chat.sendChatMessage("Bitte gib eine Zahl zwischen 1 und 16 ein.");
         }
       }
     });
+
 
     // Bereich für das Popup verlassen
     WA.room.area.onLeave("punkteabgeben").subscribe(() => {
