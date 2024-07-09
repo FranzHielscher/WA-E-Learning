@@ -527,15 +527,15 @@
                  "y":3.36571451800331
                 }, 
                 {
-                 "height":96.8870156370883,
+                 "height":114.531125912777,
                  "id":35,
                  "name":"Infotafel-Quizerlaeuterung",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":96.1800437580589,
-                 "x":550.573675225648,
-                 "y":255.089489485406
+                 "width":110.29533197861,
+                 "x":580.56866269432,
+                 "y":254.501352476216
                 }, 
                 {
                  "height":94,
@@ -571,7 +571,7 @@
                  "y":583.795697484246
                 }, 
                 {
-                 "height":276.225530418474,
+                 "height":97.4318796248232,
                  "id":43,
                  "name":"QuizZone",
                  "properties":[
@@ -586,23 +586,6 @@
                  "width":278.32610479428,
                  "x":86.1235494080413,
                  "y":277.275817606377
-                }, 
-                {
-                 "height":265.723128120971,
-                 "id":44,
-                 "name":"QuizZone",
-                 "properties":[
-                        {
-                         "name":"openWebsite",
-                         "type":"string",
-                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
-                        }],
-                 "rotation":0,
-                 "type":"area",
-                 "visible":true,
-                 "width":278.326,
-                 "x":662.206124369945,
-                 "y":285.152736724886
                 }, 
                 {
                  "height":39.697,
@@ -702,6 +685,91 @@
                  "width":30.2098596491228,
                  "x":191.037091896408,
                  "y":628.355889724311
+                }, 
+                {
+                 "height":92.1386732664996,
+                 "id":64,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":278.326,
+                 "x":92.5629816207185,
+                 "y":374.742693441938
+                }, 
+                {
+                 "height":105.665824477861,
+                 "id":65,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":178.342708437761,
+                 "x":79.0358304093567,
+                 "y":467.668340893901
+                }, 
+                {
+                 "height":91.6344452798664,
+                 "id":66,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":163.051010860485,
+                 "x":765.39178780284,
+                 "y":287.656461570593
+                }, 
+                {
+                 "height":93.9869764411027,
+                 "id":67,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":257.152921470343,
+                 "x":670.701734753551,
+                 "y":381.758391478697
+                }, 
+                {
+                 "height":95.7513874686716,
+                 "id":68,
+                 "name":"QuizZone",
+                 "properties":[
+                        {
+                         "name":"openWebsite",
+                         "type":"string",
+                         "value":"https:\/\/u.quizacademy.io\/LUUWTQ"
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":157.169393483709,
+                 "x":771.567350041771,
+                 "y":477.624723976608
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -753,7 +821,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":64,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -782,7 +850,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
