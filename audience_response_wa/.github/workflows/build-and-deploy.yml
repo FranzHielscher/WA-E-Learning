@@ -1,6 +1,6 @@
 name: Optimize map and deploy
 
-on: [ push ]
+on: [push]
 
 permissions:
   contents: write
@@ -20,21 +20,28 @@ jobs:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: "Install dependencies"
+      - name: Install dependencies
         run: npm install
 
-      - name: "Build scripts"
-        run: npm run build
+      - name: Compile TypeScript
+        run: tsc main.ts --outDir dist
+
+      - name: Verify build output
+        run: |
+          echo "Contents of the dist/ folder:"
+          ls -al dist/
+          echo "Build completed successfully."
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         if: github.ref == 'refs/heads/master'
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: audience_response_wa/ # The folder the action should deploy.
+          BRANCH: gh-pages
+          FOLDER: dist/
           BASE_BRANCH: master
 
-      - name: Bash2
+      - name: List deployed files
         run: |
-          ls -al
+          echo "Files deployed to gh-pages branch:"
+          ls -al dist/
