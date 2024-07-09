@@ -81,7 +81,6 @@ function updateTeamScores(scores: { [key: string]: number }) {
       teams[key].teamScore = scores[key];
     }
   }
-  showPopupWithTotalScore();
 }
 
 // Beispiel für eine Funktion, die bei einem Button-Klick ausgeführt wird
@@ -91,7 +90,7 @@ function buttonClicked(points: number) {
     if (teams[key].members.includes(playerName)) {
       teams[key].teamScore += points;
       socket.send(
-        JSON.stringify({ type: "updateScore", teamKey: key, points })
+        JSON.stringify({ type: "updateTeamScores", teamKey: key, points })
       );
       WA.chat.sendChatMessage(
         `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
@@ -101,21 +100,6 @@ function buttonClicked(points: number) {
     }
   }
 }
-
-// Listener für Chatnachrichten
-WA.chat.onChatMessage((message) => {
-  // Überprüfen, ob die Nachricht dem Muster "punkte <nummer>" entspricht
-  const match = message.match(/^punkte\s+(\d+)$/i);
-  if (match) {
-    const points = parseInt(match[1], 10);
-    if (points >= 1 && points <= 18) {
-      buttonClicked(points);
-      WA.chat.sendChatMessage(`Du hast ${points} Punkte eingegeben.`);
-    } else {
-      WA.chat.sendChatMessage("Bitte gib eine Zahl zwischen 1 und 18 ein.");
-    }
-  }
-});
 
 // Funktion, um Punktzahl im Popup anzuzeigen
 function showPopupWithTotalScore() {
@@ -135,16 +119,10 @@ function showPopupWithTotalScore() {
     },
   ]);
 }
+
 socket.onopen = () => {
   console.log("WebSocket connection established");
   socket.send(JSON.stringify({ type: "requestTeams" }));
-};
-
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  if (data.type === "teamUpdate") {
-    teams[data.teamKey].members = data.members;
-  }
 };
 
 socket.onerror = (error) => {
@@ -658,33 +636,19 @@ WA.onInit()
       }
     );
 
-    // Beispiel für eine Funktion, die bei einem Button-Klick ausgeführt wird
-    function buttonClicked(buttonNumber: number) {
-      WA.chat.sendChatMessage(
-        `Button ${buttonNumber} geklickt!`,
-        WA.player.name
-      );
-    }
-
     WA.chat.onChatMessage((message) => {
       // Überprüfen, ob die Nachricht dem Muster "punkte <nummer>" entspricht
       const match = message.match(/^punkte\s+(\d+)$/i);
       if (match) {
         const points = parseInt(match[1], 10);
-        if (points >= 1 && points <= 18) {
+        if (points >= 1 && points <= 16) {
           buttonClicked(points);
           WA.chat.sendChatMessage(`Du hast ${points} Punkte eingegeben.`);
         } else {
-          WA.chat.sendChatMessage("Bitte gib eine Zahl zwischen 1 und 18 ein.");
+          WA.chat.sendChatMessage("Bitte gib eine Zahl zwischen 1 und 16 ein.");
         }
       }
     });
-
-    function buttonClicked(points) {
-      // Hier wird die Logik implementiert, die ausgeführt werden soll, wenn die Punkte eingegeben werden.
-      console.log(`Punkte eingegeben: ${points}`);
-      // Füge hier die Kommunikation mit dem Server oder andere Logik hinzu
-    }
 
     // Bereich für das Popup verlassen
     WA.room.area.onLeave("punkteabgeben").subscribe(() => {

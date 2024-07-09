@@ -549,26 +549,26 @@
                  "y":141.001406634627
                 }, 
                 {
-                 "height":64.3280971750087,
+                 "height":175.485991911851,
                  "id":37,
                  "name":"scorePopup",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
                  "width":186.504698159653,
-                 "x":419.287798616809,
-                 "y":561.77335617161
+                 "x":196.383872133935,
+                 "y":409.445870791493
                 }, 
                 {
-                 "height":94,
+                 "height":39.3032581453634,
                  "id":38,
                  "name":"ergebnis",
                  "rotation":0,
                  "type":"area",
                  "visible":true,
-                 "width":154.666,
-                 "x":435.207147696636,
-                 "y":416.176649865198
+                 "width":92.3234770258981,
+                 "x":469.319094229635,
+                 "y":583.795697484246
                 }, 
                 {
                  "height":276.225530418474,
@@ -782,7 +782,7 @@
          "value":"src\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
