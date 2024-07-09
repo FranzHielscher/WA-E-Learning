@@ -1722,15 +1722,15 @@
         {
          "name":"mapName",
          "type":"string",
-         "value":"Office"
+         "value":"park"
         }, 
         {
          "name":"script",
          "type":"string",
-         "value":"src\/main.ts"
+         "value":"https:\/\/franzhielscher.github.io\/WA-E-Learning\/audience_response_wa\/main.ts"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {
