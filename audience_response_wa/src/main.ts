@@ -89,13 +89,12 @@ function pointsSend(points: number) {
   for (const key in teams) {
     if (teams[key].members.includes(playerName)) {
       WA.chat.sendChatMessage(
-          `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
-          playerName
+        `${playerName} hat ${points} Punkte zu ${teams[key].name} hinzugefügt.`,
+        playerName
       );
       teams[key].teamScore += points;
       socket.send(
         JSON.stringify({ type: "updateTeamScores", teamKey: key, points })
-
       );
       break;
     }
@@ -322,7 +321,7 @@ WA.onInit()
     const teamZones = {
       teamRotZone: "Rot",
       teamBlauZone: "Blau",
-      teamGruenZone: "Grün",
+      teamGruenZone: "Gruen",
       teamGelbZone: "Gelb",
     };
 
@@ -578,7 +577,8 @@ WA.onInit()
       {
         area: "Infotafel-Quizerlaeuterung",
         popup: "Quizerlaeuterung-Pop-Up",
-        message: "Begib dich erneut unten links in Dein Team! \n \n Begib dich dann auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: \n \n Meine Punkte: X",
+        message:
+          "Begib dich erneut unten links in Dein Team! \n \n Begib dich dann auf einen Sitzplatz, gib den Code ein und beginne mit dem Quiz! \n \n Wenn Du fertig bist, gib bitte deinen Punktestand über deine Timeline im Chat wie folgt ein: \n \n Meine Punkte: X",
       },
     ];
 
@@ -655,7 +655,6 @@ WA.onInit()
         }
       }
     });
-
 
     // Bereich für das Popup verlassen
     WA.room.area.onLeave("punkteabgeben").subscribe(() => {
